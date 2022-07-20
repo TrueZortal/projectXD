@@ -24,7 +24,7 @@ class BoardTest < Minitest::Test
   def test_correctly_renders_2_x_2_board
     test = Board.new(2)
     test_output = StringIO.new(test.render_field)
-    value = "|grass|grass|\n|grass|grass|"
+    value = "🟩🟩\n🟩🟩"
     assert_equal value, test_output.string
   end
 end

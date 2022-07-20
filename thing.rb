@@ -1,7 +1,7 @@
 generation_key = {
-  'grass': {'grass': 4,'road': 1,'tree': 1},
-  'road': {'road': 3,'grass': 3,'tree': 1},
-  'tree': {'grass': 3,'tree': 1}
+  'grass': {'grass': 4,'road': 1,'🌲': 1},
+      'road': {'road': 6,'grass': 3,'🌲': 1},
+      'tree': {'grass': 3,'🌲': 1}
 }
 
 surface_pool = []
