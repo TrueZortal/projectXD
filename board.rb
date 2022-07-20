@@ -5,9 +5,10 @@ require_relative 'field'
 class Board
   attr_reader :array_of_fields
 
-  def initialize(size_of_board_edge, starting_surface: 'grass')
+  def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1
 
+    @uniform = uniform
     @starting_surface = starting_surface
     generate_an_array_of_fields(size_of_board_edge)
   end
@@ -24,14 +25,19 @@ class Board
 
   def surface_selector
     generation_key = {
-      'grass': ['grass','road','tree'],
-      'road': ['road','road','grass','tree'],
-      'tree': ['grass','grass','tree']
+      'grass': {'grass': 4,'road': 1,'tree': 1},
+      'road': {'road': 6,'grass': 3,'tree': 1},
+      'tree': {'grass': 3,'tree': 1}
     }
-    if @array_of_fields.empty?
-      @starting_surface
+
+    if @array_of_fields.empty? || @uniform == true
+      return @starting_surface
     else
-      puts generation_key[@array_of_fields.last.surface]
+      field_pool = []
+      generation_key[@array_of_fields.last.surface.to_sym].map do |surface, weight|
+        weight.times {field_pool << surface}
+      end
+      return field_pool.sample
     end
   end
 
@@ -64,5 +70,5 @@ class Board
   end
 end
 
-tomato = Board.new(2)
+tomato = Board.new(4, uniform: false)
 puts tomato.render_field
