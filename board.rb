@@ -13,6 +13,28 @@ class Board
     generate_an_array_of_fields(size_of_board_edge)
   end
 
+  def render_field
+    # 'tree': '🌲',
+    render_key = {
+      'dirt': '🟫',
+      'grass': '🟩'
+    }
+    rowify_the_array_of_fields
+    rendered_board = String.new(encoding: 'UTF-8')
+
+    @rowified_board.each_with_index do |row, index|
+      row.each do |field|
+        rendered_board << render_key[field.terrain.to_sym]
+      end
+
+      rendered_board << "\n" if index < @rowified_board.size - 1
+    end
+
+    rendered_board
+  end
+
+  private
+
   def generate_an_array_of_fields(size_of_board_edge)
     @array_of_fields = []
     size_of_board_edge.times do |x|
@@ -25,10 +47,10 @@ class Board
   end
 
   def terrain_selector
+    #'rock': {'grass': 3,'rock': 1}
     generation_key = {
-      'grass': {'grass': 6,'road': 1,'tree': 1},
-      'road': {'road': 6,'grass': 3,'tree': 1},
-      'tree': {'grass': 3,'tree': 1}
+      'grass': {'grass': 6,'dirt': 1},
+      'dirt': {'dirt': 2,'grass': 1}
     }
 
     if @array_of_fields.empty? || @uniform == true
@@ -49,7 +71,7 @@ class Board
     obstacles.include?(terrain)
   end
 
-  def rowify_the_hash_of_fields
+  def rowify_the_array_of_fields
     @rowified_board = []
     Math.sqrt(@array_of_fields.size).to_i.times do |row_index|
       row_index = []
@@ -61,26 +83,9 @@ class Board
     end
   end
 
-  def render_field
-    render_key = {
-      'tree': '🌲',
-      'road': '🟫',
-      'grass': '🟩'
-    }
-    rowify_the_hash_of_fields
-    rendered_board = String.new(encoding: 'UTF-8')
 
-    @rowified_board.each_with_index do |row, index|
-      row.each do |field|
-        rendered_board << render_key[field.terrain.to_sym]
-      end
-
-      rendered_board << "\n" if index < @rowified_board.size - 1
-    end
-
-    rendered_board
-  end
 end
 
 tomato = Board.new(8, uniform: false)
+# tomato = Board.new(8, uniform: true ,starting_surface: 'grass')
 puts tomato.render_field
