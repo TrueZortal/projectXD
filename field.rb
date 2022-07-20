@@ -4,7 +4,7 @@ class Field
   attr_accessor :status, :surface, :obstacle, :occupant
   attr_reader :x, :y
 
-  def initialize(x: 0, y: 0, status: 'empty', occupant: '', surface: 'grass', obstacle: '')
+  def initialize(x: 0, y: 0, status: 'empty', occupant: '', surface: '', obstacle: '')
     @x = x
     @y = y
     @status = status
@@ -13,3 +13,4 @@ class Field
     @obstacle = obstacle
   end
 end
+

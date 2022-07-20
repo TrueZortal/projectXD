@@ -3,32 +3,46 @@
 require_relative 'field'
 
 class Board
-  attr_reader :hash_of_fields
+  attr_reader :array_of_fields
 
-  def initialize(size_of_board_edge)
+  def initialize(size_of_board_edge, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1
 
-    generate_a_hash_of_fields(size_of_board_edge)
+    @starting_surface = starting_surface
+    generate_an_array_of_fields(size_of_board_edge)
   end
 
-  def generate_a_hash_of_fields(size_of_board_edge)
-    @hash_of_fields = []
+  def generate_an_array_of_fields(size_of_board_edge)
+    @array_of_fields = []
     size_of_board_edge.times do |x|
       size_of_board_edge.times do |y|
-        @hash_of_fields << Field.new(x: x, y: y)
+        @array_of_fields << Field.new(x: x, y: y, surface: surface_selector)
       end
     end
-    @hash_of_fields
+    @array_of_fields
+  end
+
+  def surface_selector
+    generation_key = {
+      'grass': ['grass','road','tree'],
+      'road': ['road','road','grass','tree'],
+      'tree': ['grass','grass','tree']
+    }
+    if @array_of_fields.empty?
+      @starting_surface
+    else
+      puts generation_key[@array_of_fields.last.surface]
+    end
   end
 
   def rowify_the_hash_of_fields
     @rowified_board = []
-    Math.sqrt(@hash_of_fields.size).to_i.times do |row_index|
+    Math.sqrt(@array_of_fields.size).to_i.times do |row_index|
       row_index = []
       @rowified_board << row_index
     end
 
-    @hash_of_fields.each do |field|
+    @array_of_fields.each do |field|
       @rowified_board[field.x] << field
     end
   end

@@ -18,7 +18,7 @@ class BoardTest < Minitest::Test
 
   def test_creates_a_custom_sized_board
     test = Board.new(5)
-    assert_equal 25, test.hash_of_fields.size
+    assert_equal 25, test.array_of_fields.size
   end
 
   def test_correctly_renders_2_x_2_board

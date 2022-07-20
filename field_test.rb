@@ -9,7 +9,7 @@ class FieldTest < Minitest::Test
     assert_equal 0, test.x
     assert_equal 0, test.y
     assert_equal 'empty', test.status
-    assert_equal 'grass', test.surface
+    assert_equal '', test.surface
     assert_equal '', test.occupant
     assert_equal '', test.obstacle
   end
