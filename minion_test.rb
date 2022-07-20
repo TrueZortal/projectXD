@@ -31,7 +31,9 @@ class MinionTest < Minitest::Test
     skelly = Minion.new(owner: 'Mateusz')
     assert_equal 'Mateusz', skelly.owner
   end
+end
 
+class RaisedSkeletonTest < Minitest::Test
   def test_skeleton_can_be_placed_anywhere_if_not_connected_to_a_board
     skelly = RaisedSkeleton.new(x: 1, y: 666)
     assert_equal 666, skelly.y
