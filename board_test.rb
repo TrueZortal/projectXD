@@ -27,4 +27,9 @@ class BoardTest < Minitest::Test
     value = "🟩🟩\n🟩🟩"
     assert_equal value, test_output.string
   end
+
+  def test_board_gives_correct_limit
+    test = Board.new(8)
+    assert_equal 7, test.upper_limit
+  end
 end

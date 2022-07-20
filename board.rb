@@ -3,14 +3,16 @@
 require_relative 'field'
 
 class Board
-  attr_reader :array_of_fields
+  attr_reader :array_of_fields, :upper_limit
 
   def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1
 
+    @upper_limit = 7
     @uniform = uniform
     @starting_surface = starting_surface
     generate_an_array_of_fields(size_of_board_edge)
+    rowify_the_array_of_fields
   end
 
   def render_field
@@ -21,15 +23,12 @@ class Board
     }
     rowify_the_array_of_fields
     rendered_board = String.new(encoding: 'UTF-8')
-
     @rowified_board.each_with_index do |row, index|
       row.each do |field|
         rendered_board << render_key[field.terrain.to_sym]
       end
-
       rendered_board << "\n" if index < @rowified_board.size - 1
     end
-
     rendered_board
   end
 
@@ -47,7 +46,7 @@ class Board
   end
 
   def terrain_selector
-    #'rock': {'grass': 3,'rock': 1}
+    # 'rock': {'grass': 3,'rock': 1}
     generation_key = {
       'grass': {'grass': 6,'dirt': 1},
       'dirt': {'dirt': 2,'grass': 1}
@@ -77,13 +76,10 @@ class Board
       row_index = []
       @rowified_board << row_index
     end
-
     @array_of_fields.each do |field|
       @rowified_board[field.x] << field
     end
   end
-
-
 end
 
 tomato = Board.new(8, uniform: false)
