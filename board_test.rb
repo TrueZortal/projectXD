@@ -2,6 +2,7 @@
 
 require 'minitest/autorun'
 require_relative 'board'
+require_relative 'minion'
 require_relative 'field'
 
 class FieldTest < Minitest::Test
@@ -50,6 +51,14 @@ class BoardTest < Minitest::Test
   def test_board_gives_correct_limit
     test = Board.new(8)
     assert_equal 7, test.upper_limit
+  end
+
+  def test_a_minion_can_be_placed_on_board
+    test = Board.new(3)
+    skelly = test.place(type: 'skeleton', x: 1,y: 2)
+    assert_equal 1, skelly.x
+    assert_equal 2, skelly.y
+    assert_equal skelly, test.rowified_board[1][2].occupant
   end
 end
 

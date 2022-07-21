@@ -5,8 +5,8 @@ class Minion
   attr_accessor :x, :y, :attack, :defense, :health
   attr_reader :mana, :owner, :type
 
-  def initialize(x: 0, y: 0, owner: '', type: 'skeleton')
-    raise ArgumentError if x.negative? || y.negative? || !@@MINION_DATA.keys.include?(type.to_sym)
+  def initialize(x: nil, y: nil, owner: '', type: 'skeleton')
+    raise ArgumentError if !x.nil? && x.negative? || !y.nil? && y.negative? || !@@MINION_DATA.keys.include?(type.to_sym)
 
     @x = x
     @y = y
@@ -15,11 +15,8 @@ class Minion
     @attack = @@MINION_DATA[@type.to_sym][:attack]
     @defense = @@MINION_DATA[@type.to_sym][:defense]
     @health = @@MINION_DATA[@type.to_sym][:health]
-
   end
 
-  def move(x_y_coordinate_array)
-  end
 end
 
 

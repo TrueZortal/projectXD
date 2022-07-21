@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require_relative 'field'
+require_relative 'minion'
 
 class Board
-  attr_reader :array_of_fields, :upper_limit
+  attr_reader :array_of_fields, :rowified_board, :upper_limit
 
   def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1
@@ -13,6 +14,12 @@ class Board
     @starting_surface = starting_surface
     generate_an_array_of_fields(size_of_board_edge)
     rowify_the_array_of_fields
+  end
+
+  def place(owner: '', type: '', x: nil, y: nil)
+    # check if owner has sufficient mana, return insufficient mana error
+
+    @rowified_board[x][y].occupant = Minion.new(owner: owner, type: type, x: x, y: y)
   end
 
   def render_field
