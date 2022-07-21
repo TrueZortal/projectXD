@@ -60,5 +60,8 @@ class BoardTest < Minitest::Test
     assert_equal 2, skelly.y
     assert_equal skelly, test.rowified_board[1][2].occupant
   end
+
+  def test_a_minion_cant_be_placed_out_of_bounds
+  end
 end
 
