@@ -105,7 +105,7 @@ class Board
   end
 
   def valid_position(address_array)
-    address_array.none? { |coordinate_value| coordinate_value.negative? || coordinate_value > @upper_limit }
+    address_array.none? { |coordinate_value| coordinate_value > @upper_limit }
   end
 
   def distance(starting_field_array, end_field_array)
@@ -155,7 +155,7 @@ class Board
       @rowified_board << row_index
     end
     @array_of_fields.each do |field|
-      @rowified_board[field.x] << field
+      @rowified_board[field.position.x] << field
     end
   end
 end
