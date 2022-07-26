@@ -3,13 +3,17 @@
 require_relative 'field'
 require_relative 'minion'
 
+class InvalidMovementError < StandardError
+end
+
+# working surface for board is @rowified_board
 class Board
   attr_reader :array_of_fields, :rowified_board, :upper_limit
 
   def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1
 
-    @upper_limit = 7
+    @upper_limit = size_of_board_edge - 1
     @uniform = uniform
     @starting_surface = starting_surface
     generate_an_array_of_fields(size_of_board_edge)
@@ -17,26 +21,52 @@ class Board
   end
 
   def place(owner: '', type: '', x: nil, y: nil)
+    raise ArgumentError unless x <= @upper_limit && y <= @upper_limit
+
     # check if owner has sufficient mana, return insufficient mana error
 
     @rowified_board[x][y].occupant = Minion.new(owner: owner, type: type, x: x, y: y)
   end
 
-  def render_field
+  def render_board
     # 'tree': '🌲',
     render_key = {
       'dirt': '🟫',
       'grass': '🟩'
     }
-    rowify_the_array_of_fields
     rendered_board = String.new(encoding: 'UTF-8')
     @rowified_board.each_with_index do |row, index|
       row.each do |field|
-        rendered_board << render_key[field.terrain.to_sym]
+        rendered_board << if field.is_occupied?
+                            field.occupant.type.chr + field.occupant.owner
+                          else
+                            render_key[field.terrain.to_sym]
+                          end
       end
       rendered_board << "\n" if index < @rowified_board.size - 1
     end
     rendered_board
+  end
+
+  def check_field(address_array)
+    unless address_array.size == 2 && address_array.first <= @upper_limit && address_array.last <= @upper_limit
+      raise ArgumentError
+    end
+
+    @rowified_board[address_array.first][address_array.last]
+  end
+
+  def move(from_position_array, to_position_array)
+    raise InvalidMovementError unless distance(from_position_array,
+                                               to_position_array) <= check_field(from_position_array).occupant.speed &&
+                                               check_field(to_position_array).is_empty?
+
+    check_field(to_position_array).occupant = check_field(from_position_array).occupant
+    check_field(from_position_array).occupant = ''
+  end
+
+  def distance(starting_field_array, end_field_array)
+    Math.sqrt((end_field_array[0] - starting_field_array[0])**2 + (end_field_array[1] - starting_field_array[1])**2)
   end
 
   private
@@ -55,18 +85,18 @@ class Board
   def terrain_selector
     # 'rock': {'grass': 3,'rock': 1}
     generation_key = {
-      'grass': {'grass': 6,'dirt': 1},
-      'dirt': {'dirt': 2,'grass': 1}
+      'grass': { 'grass': 6, 'dirt': 1 },
+      'dirt': { 'dirt': 2, 'grass': 1 }
     }
 
     if @array_of_fields.empty? || @uniform == true
-      return @starting_surface
+      @starting_surface
     else
       field_pool = []
       generation_key[@array_of_fields.last.terrain.to_sym].map do |terrain, weight|
-        weight.times {field_pool << terrain}
+        weight.times { field_pool << terrain }
       end
-      return field_pool.sample
+      field_pool.sample
     end
   end
 
@@ -89,6 +119,8 @@ class Board
   end
 end
 
-tomato = Board.new(8, uniform: false)
-# tomato = Board.new(8, uniform: true ,starting_surface: 'grass')
-puts tomato.render_field
+test_board = Board.new(5)
+# test_board.place(owner: '1',type: 'skeleton', x: 1,y: 1)
+# puts test_board.render_board
+
+test_board.distance([1, 1], [2, 2])

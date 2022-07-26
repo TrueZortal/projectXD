@@ -12,4 +12,12 @@ class Field
     @terrain = terrain
     @obstacle = obstacle
   end
+
+  def is_occupied?
+    @occupant != ''
+  end
+
+  def is_empty?
+    @occupant == ''
+  end
 end
