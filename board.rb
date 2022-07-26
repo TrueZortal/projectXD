@@ -59,17 +59,21 @@ class Board
   def move(from_position_array, to_position_array)
     raise InvalidMovementError unless distance(from_position_array,
                                                to_position_array) <= check_field(from_position_array).occupant.speed &&
-                                               check_field(to_position_array).is_empty?
+                                      check_field(to_position_array).is_empty? && valid_position(from_position_array) && valid_position(to_position_array)
 
     check_field(to_position_array).occupant = check_field(from_position_array).occupant
     check_field(from_position_array).occupant = ''
   end
 
+  private
+
+  def valid_position(address_array)
+    address_array.none? { |coordinate_value| coordinate_value.negative? || coordinate_value > @upper_limit }
+  end
+
   def distance(starting_field_array, end_field_array)
     Math.sqrt((end_field_array[0] - starting_field_array[0])**2 + (end_field_array[1] - starting_field_array[1])**2)
   end
-
-  private
 
   def generate_an_array_of_fields(size_of_board_edge)
     @array_of_fields = []
@@ -119,8 +123,6 @@ class Board
   end
 end
 
-test_board = Board.new(5)
+# test_board = Board.new(5)
 # test_board.place(owner: '1',type: 'skeleton', x: 1,y: 1)
 # puts test_board.render_board
-
-test_board.distance([1, 1], [2, 2])
