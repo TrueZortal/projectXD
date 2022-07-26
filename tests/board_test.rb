@@ -111,4 +111,59 @@ class BoardTest < Minitest::Test
       test_board.move(skellys_position, estranged_cousins_position)
     end
   end
+
+  def test_skeleton_can_attack_within_1_square
+    test_board = Board.new(3)
+    skelly = test_board.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
+    skellys_position = [skelly.x, skelly.y]
+    skellys_sworn_enemy_kevin = test_board.place(type: 'skeleton', x: 0, y: 1)
+    sworn_enemies_position = [skellys_sworn_enemy_kevin.x, skellys_sworn_enemy_kevin.y]
+    test_board.attack(skellys_position,sworn_enemies_position)
+    assert_equal 4, test_board.check_field(sworn_enemies_position).occupant.health
+  end
+
+  def test_skeleton_cannot_attack_from_further_than_their_range
+    test_board = Board.new(3)
+    skelly = test_board.place(type: 'skeleton', x: 0, y: 0)
+    skellys_position = [skelly.x, skelly.y]
+    skellys_sworn_enemy_kevin = test_board.place(type: 'skeleton', x: 0, y: 2)
+    sworn_enemies_position = [skellys_sworn_enemy_kevin.x, skellys_sworn_enemy_kevin.y]
+    assert_raises (OutOfRangeError) do
+      test_board.attack(skellys_position,sworn_enemies_position)
+    end
+  end
+
+  def test_skeleton_cant_attack_an_empty_field
+    test_board = Board.new(3)
+    skelly = test_board.place(type: 'skeleton', x: 0, y: 0)
+    skellys_position = [skelly.x, skelly.y]
+    suspicious_patch_of_grass = [0,1]
+    assert_raises (InvalidTargetError) do
+      test_board.attack(skellys_position,suspicious_patch_of_grass)
+    end
+  end
+
+  def test_skeleton_cant_attack_an_out_of_bound_field
+    test_board = Board.new(3)
+    skelly = test_board.place(type: 'skeleton', x: 0, y: 0)
+    skellys_position = [skelly.x, skelly.y]
+    suspicious_patch_of_grass = [0,-1]
+    assert_raises (InvalidTargetError) do
+      test_board.attack(skellys_position,suspicious_patch_of_grass)
+    end
+  end
+
+  def test_minion_with_0_hp_perishes
+    test_board = Board.new(3)
+    skelly = test_board.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
+    skellys_position = [skelly.x, skelly.y]
+    skellys_sworn_enemy_kevin = test_board.place(type: 'skeleton', x: 0, y: 1)
+    sworn_enemies_position = [skellys_sworn_enemy_kevin.x, skellys_sworn_enemy_kevin.y]
+    test_board.attack(skellys_position,sworn_enemies_position)
+    test_board.attack(skellys_position,sworn_enemies_position)
+    test_board.attack(skellys_position,sworn_enemies_position)
+    test_board.attack(skellys_position,sworn_enemies_position)
+    test_board.attack(skellys_position,sworn_enemies_position)
+    assert_equal false, test_board.check_field(sworn_enemies_position).is_occupied?
+  end
 end

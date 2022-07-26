@@ -6,6 +6,12 @@ require_relative 'minion'
 class InvalidMovementError < StandardError
 end
 
+class OutOfRangeError < StandardError
+end
+
+class InvalidTargetError < StandardError
+end
+
 # working surface for board is @rowified_board
 class Board
   attr_reader :array_of_fields, :rowified_board, :upper_limit
@@ -65,7 +71,38 @@ class Board
     check_field(from_position_array).occupant = ''
   end
 
+  def attack(from_position_array, to_position_array)
+    raise OutOfRangeError unless distance(from_position_array,
+                                          to_position_array) <= check_field(from_position_array).occupant.range
+
+    raise InvalidTargetError unless check_field(to_position_array).is_occupied? && different_owners(
+      from_position_array, to_position_array
+    ) && valid_position(from_position_array) && valid_position(to_position_array)
+
+    target_health = check_field(to_position_array).occupant.health
+    target_defense = check_field(to_position_array).occupant.defense
+    attacker_attack = check_field(from_position_array).occupant.attack
+
+    damage = attacker_attack - target_defense > 1 ? attacker_attack - target_defense : 1
+
+    check_field(to_position_array).occupant.health = target_health - damage
+
+    perish_a_creature(to_position_array) if check_field(to_position_array).occupant.health <= 0
+  end
+
   private
+
+  # returns perished minion/creature for future logging purpose
+  def perish_a_creature(position_array)
+    minion = check_field(position_array).occupant
+    check_field(position_array).occupant = ''
+
+    minion
+  end
+
+  def different_owners(first_occupant_position_array, second_occupant_position_array)
+    check_field(first_occupant_position_array).occupant.owner != check_field(second_occupant_position_array).occupant.owner
+  end
 
   def valid_position(address_array)
     address_array.none? { |coordinate_value| coordinate_value.negative? || coordinate_value > @upper_limit }
