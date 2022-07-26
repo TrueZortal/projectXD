@@ -6,7 +6,7 @@ class PositionTest < Minitest::Test
     test_position = Position.new(2,3)
     assert_equal 2, test_position.x
     assert_equal 3, test_position.y
-    assert_equal [2,3], test_position.position
+    assert_equal [2,3], test_position.to_a
   end
 
   def test_can_compare_if_two_positions_are_overlapping

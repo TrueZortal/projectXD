@@ -4,25 +4,25 @@ require_relative '../minion'
 class MinionTest < Minitest::Test
   def test_can_create_a_new_minion_object_without_type_and_space
       skelly = Minion.new
-      assert_nil skelly.x
-      assert_nil skelly.y
+      assert_nil skelly.position.x
+      assert_nil skelly.position.y
   end
 
   def test_cant_create_a_new_minion_with_a_negative_coordinate_x
-    assert_raises(ArgumentError) do
+    assert_raises(InvalidPositionError) do
       skelly = Minion.new(x: -1)
     end
   end
 
   def test_cant_create_a_new_minion_with_a_negative_coordinate_y
-    assert_raises(ArgumentError) do
+    assert_raises(InvalidPositionError) do
       skelly = Minion.new(y: -1)
     end
   end
 
   def test_minion_can_be_placed_anywhere_if_not_connected_to_a_board
     skelly = Minion.new(x: 7, y: 1000)
-    assert_equal 1000, skelly.y
+    assert_equal 1000, skelly.position.y
   end
 
   def test_minion_can_be_assigned_an_owner
