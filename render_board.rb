@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenderBoard
   # 'tree': '🌲',
   @@RENDER_KEY = {

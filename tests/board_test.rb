@@ -27,5 +27,4 @@ class BoardTest < Minitest::Test
     test = Board.new(8)
     assert_equal 7, test.upper_limit
   end
-
 end

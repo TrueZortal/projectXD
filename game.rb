@@ -13,7 +13,6 @@ end
 class InvalidTargetError < StandardError
 end
 
-# working surface for board is @rowified_board
 class Game
   attr_accessor :board
 
@@ -23,7 +22,7 @@ class Game
 
   def move(from_position, to_position)
     raise InvalidMovementError unless from_position.distance(to_position) <= check_field(from_position).occupant.speed &&
-    check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
+                                      check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
 
     check_field(to_position).occupant = check_field(from_position).occupant
     check_field(from_position).occupant = ''
@@ -46,6 +45,7 @@ class Game
 
     perish_a_creature(to_position) if check_field(to_position).occupant.health <= 0
   end
+
   private
 
   def check_field(position)
@@ -67,7 +67,6 @@ class Game
   def different_owners(first_occupant_position_array, second_occupant_position_array)
     check_field(first_occupant_position_array).occupant.owner != check_field(second_occupant_position_array).occupant.owner
   end
-
 end
 
 # test_board = Board.new(5)

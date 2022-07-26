@@ -14,7 +14,7 @@ end
 
 # working surface for board is @rowified_board
 class Board
-  attr_reader :array_of_fields,  :upper_limit
+  attr_reader :array_of_fields, :upper_limit
 
   def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1

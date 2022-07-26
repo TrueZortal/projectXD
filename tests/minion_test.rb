@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require_relative '../minion'
 
 class MinionTest < Minitest::Test
   def test_can_create_a_new_minion_object_without_type_and_space
-      skelly = Minion.new
-      assert_nil skelly.position.x
-      assert_nil skelly.position.y
+    skelly = Minion.new
+    assert_nil skelly.position.x
+    assert_nil skelly.position.y
   end
 
   def test_cant_create_a_new_minion_with_a_negative_coordinate_x

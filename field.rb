@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'position'
 
 class Field
@@ -6,7 +7,7 @@ class Field
   attr_reader :position
 
   def initialize(x: 0, y: 0, status: 'empty', occupant: '', terrain: '', obstacle: '')
-    @position = Position.new(x,y)
+    @position = Position.new(x, y)
     @status = status
     @occupant = occupant
     @terrain = terrain

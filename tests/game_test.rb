@@ -12,7 +12,7 @@ class GameTest < Minitest::Test
     skelly = test_game.board.place(type: 'skeleton', x: 1, y: 2)
     assert_equal 1, skelly.position.x
     assert_equal 2, skelly.position.y
-    assert_equal skelly, test_game.board.check_field(Position.new(skelly.position.x,skelly.position.y)).occupant
+    assert_equal skelly, test_game.board.check_field(Position.new(skelly.position.x, skelly.position.y)).occupant
   end
 
   def test_a_minion_cant_be_placed_out_of_bounds
@@ -27,7 +27,7 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     skelly = test_game.board.place(type: 'skeleton', x: 2, y: 2)
-    test_field = Position.new(2,2)
+    test_field = Position.new(2, 2)
     assert_equal skelly, test_game.board.check_field(test_field).occupant
   end
 
@@ -35,7 +35,7 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     skelly = test_game.board.place(type: 'skeleton', x: 1, y: 1)
-    target_field = Position.new(2,2)
+    target_field = Position.new(2, 2)
     test_game.move(skelly.position, target_field)
     assert_equal skelly, test_game.board.check_field(target_field).occupant
     assert_equal '', test_game.board.check_field(skelly.position).occupant
@@ -46,7 +46,7 @@ class GameTest < Minitest::Test
     test_game = Game.new(3)
     skelly = test_game.board.place(type: 'skeleton', x: 0, y: 0)
     assert_raises(InvalidPositionError) do
-      test_game.board.move(skelly.position, Position.new(-1,-1))
+      test_game.board.move(skelly.position, Position.new(-1, -1))
     end
   end
 
@@ -54,15 +54,15 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     skelly = test_game.board.place(type: 'skeleton', x: 0, y: 0)
-    target_field = Position.new(2,2)
+    target_field = Position.new(2, 2)
     assert_raises(InvalidMovementError) do
       test_game.move(skelly.position, target_field)
     end
-    target_field = Position.new(0,2)
+    target_field = Position.new(0, 2)
     assert_raises(InvalidMovementError) do
       test_game.move(skelly.position, target_field)
     end
-    target_field = Position.new(1,1)
+    target_field = Position.new(1, 1)
     test_game.move(skelly.position, target_field)
     assert_equal skelly, test_game.board.check_field(target_field).occupant
   end
@@ -80,9 +80,9 @@ class GameTest < Minitest::Test
   def test_skeleton_can_attack_within_1_square
     # skip
     test_game = Game.new(3)
-    skelly = test_game.board.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
+    skelly = test_game.board.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
     skellys_sworn_enemy_kevin = test_game.board.place(type: 'skeleton', x: 0, y: 1)
-    test_game.attack(skelly.position,skellys_sworn_enemy_kevin.position)
+    test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
     assert_equal 4, test_game.board.check_field(skellys_sworn_enemy_kevin.position).occupant.health
   end
 
@@ -91,8 +91,8 @@ class GameTest < Minitest::Test
     test_game = Game.new(3)
     skelly = test_game.board.place(type: 'skeleton', x: 0, y: 0)
     skellys_sworn_enemy_kevin = test_game.board.place(type: 'skeleton', x: 0, y: 2)
-    assert_raises (OutOfRangeError) do
-      test_game.attack(skelly.position,skellys_sworn_enemy_kevin.position)
+    assert_raises(OutOfRangeError) do
+      test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
     end
   end
 
@@ -100,9 +100,9 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     skelly = test_game.board.place(type: 'skeleton', x: 0, y: 0)
-    suspicious_patch_of_grass = Position.new(0,1)
-    assert_raises (InvalidTargetError) do
-      test_game.attack(skelly.position,suspicious_patch_of_grass)
+    suspicious_patch_of_grass = Position.new(0, 1)
+    assert_raises(InvalidTargetError) do
+      test_game.attack(skelly.position, suspicious_patch_of_grass)
     end
   end
 
@@ -110,21 +110,21 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     skelly = test_game.board.place(type: 'skeleton', x: 0, y: 0)
-    assert_raises (InvalidPositionError) do
-      test_game.board.attack(skelly.position,Position.new(0,-1))
+    assert_raises(InvalidPositionError) do
+      test_game.board.attack(skelly.position, Position.new(0, -1))
     end
   end
 
   def test_minion_with_0_hp_perishes
     # skip
     test_game = Game.new(3)
-    skelly = test_game.board.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
+    skelly = test_game.board.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
     skellys_sworn_enemy_kevin = test_game.board.place(type: 'skeleton', x: 0, y: 1)
-    test_game.attack(skelly.position,skellys_sworn_enemy_kevin.position)
-    test_game.attack(skelly.position,skellys_sworn_enemy_kevin.position)
-    test_game.attack(skelly.position,skellys_sworn_enemy_kevin.position)
-    test_game.attack(skelly.position,skellys_sworn_enemy_kevin.position)
-    test_game.attack(skelly.position,skellys_sworn_enemy_kevin.position)
+    test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
+    test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
+    test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
+    test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
+    test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
     assert_equal false, test_game.board.check_field(skellys_sworn_enemy_kevin.position).is_occupied?
   end
 end
