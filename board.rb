@@ -12,6 +12,9 @@ end
 class InvalidTargetError < StandardError
 end
 
+class InvalidPositionError < StandardError
+end
+
 # working surface for board is @rowified_board
 class Board
   attr_reader :array_of_fields, :upper_limit
@@ -35,7 +38,7 @@ class Board
   end
 
   def place(owner: '', type: '', x: nil, y: nil)
-    raise ArgumentError unless x <= @upper_limit && y <= @upper_limit
+    raise InvalidPositionError unless x <= @upper_limit && y <= @upper_limit
 
     # check if owner has sufficient mana, return insufficient mana error
 
@@ -44,7 +47,7 @@ class Board
 
   def check_field(position_object)
     unless position_object.to_a.size == 2 && position_object.to_a.first <= @upper_limit && position_object.to_a.last <= @upper_limit
-      raise ArgumentError
+      raise InvalidPositionError
     end
 
     @rowified_board[position_object.x][position_object.y]

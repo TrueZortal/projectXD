@@ -18,7 +18,7 @@ class GameTest < Minitest::Test
   def test_a_minion_cant_be_placed_out_of_bounds
     # skip
     test_game = Game.new(3)
-    assert_raises(ArgumentError) do
+    assert_raises(InvalidPositionError) do
       test_game.board.place(type: 'skeleton', x: 3, y: 2)
     end
   end
@@ -111,7 +111,7 @@ class GameTest < Minitest::Test
     test_game = Game.new(3)
     skelly = test_game.board.place(type: 'skeleton', x: 0, y: 0)
     assert_raises(InvalidPositionError) do
-      test_game.board.attack(skelly.position, Position.new(0, -1))
+      test_game.attack(skelly.position, Position.new(0, -1))
     end
   end
 

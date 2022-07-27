@@ -57,9 +57,9 @@ class Game
   end
 
   # returns perished minion/creature for future logging purpose
-  def perish_a_creature(position_array)
-    minion = check_field(position_array).occupant
-    check_field(position_array).occupant = ''
+  def perish_a_creature(position)
+    minion = check_field(position).occupant
+    check_field(position).occupant = ''
 
     minion
   end
@@ -68,7 +68,3 @@ class Game
     check_field(first_occupant_position_array).occupant.owner != check_field(second_occupant_position_array).occupant.owner
   end
 end
-
-# test_board = Board.new(5)
-# test_board.place(owner: '1',type: 'skeleton', x: 1,y: 1)
-# puts test_board.render_board
