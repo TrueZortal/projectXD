@@ -56,6 +56,8 @@ class Game
   end
 
   def place(owner: '', type: '', x: nil, y: nil)
+    raise UnknownPlayerError unless @players.map { |player| player = player.name }.include?(owner)
+
     raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit
 
     # check if owner has sufficient mana, return insufficient mana error
