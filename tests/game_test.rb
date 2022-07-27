@@ -166,6 +166,14 @@ class GameTest < Minitest::Test
     assert_equal 2, test_game.players.size
   end
 
+  def test_game_cant_have_two_players_with_same_name
+    test_game = Game.new(3)
+    test_game.add_player('Mateusz')
+    assert_raises (DuplicatePlayerError) do
+      test_game.add_player('Mateusz')
+    end
+  end
+
   def test_all_players_in_game_are_instances_of_player_class
     test_game = Game.new(3)
     test_game.add_player('Mateusz')
@@ -188,4 +196,14 @@ class GameTest < Minitest::Test
     end
   end
 
+  def test_summoning_minions_costs_mana
+    test_game = Game.new(3)
+    test_player_name = 'Mateusz'
+    test_game.add_player(test_player_name, max_mana: 5)
+    test_game.place(owner: test_player_name, type: 'skeleton', x: 0, y: 0)
+    assert_equal 4, (test_game.players.select { |player| player.name == test_player_name}.first.mana)
+  end
+
+  def test_cant_summon_minions_with_insufficient_mana
+  end
 end

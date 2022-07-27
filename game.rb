@@ -17,6 +17,9 @@ end
 class UnknownPlayerError < StandardError
 end
 
+class DuplicatePlayerError < StandardError
+end
+
 class Game
   attr_accessor :board, :players
 
@@ -51,7 +54,9 @@ class Game
     perish_a_creature(to_position) if check_field(to_position).occupant.health <= 0
   end
 
-  def add_player(player_name, max_mana: 0)
+  def add_player(player_name, max_mana: 1)
+    raise DuplicatePlayerError unless @players.filter { |player| player.name == player_name}.empty?
+
     @players << Player.new(name: player_name, mana: max_mana)
   end
 
@@ -61,8 +66,10 @@ class Game
     raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit
 
     # check if owner has sufficient mana, return insufficient mana error
-
-    @board.state[x][y].occupant = Minion.new(owner: owner, type: type, x: x, y: y)
+    summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y)
+    minion_owner = @players.filter { |player| player.name == owner}.first
+    minion_owner.mana -= 1
+    @board.state[x][y].occupant = summoned_minion
   end
 
   private
