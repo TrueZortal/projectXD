@@ -37,14 +37,6 @@ class Board
     @rowified_board
   end
 
-  def place(owner: '', type: '', x: nil, y: nil)
-    raise InvalidPositionError unless x <= @upper_limit && y <= @upper_limit
-
-    # check if owner has sufficient mana, return insufficient mana error
-
-    @rowified_board[x][y].occupant = Minion.new(owner: owner, type: type, x: x, y: y)
-  end
-
   def check_field(position_object)
     unless position_object.to_a.size == 2 && position_object.to_a.first <= @upper_limit && position_object.to_a.last <= @upper_limit
       raise InvalidPositionError

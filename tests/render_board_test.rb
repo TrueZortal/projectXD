@@ -15,7 +15,7 @@ class RenderBoardTest < Minitest::Test
 
   def test_a_placed_minion_renders_with_its_first_letter_as_symbol_and_owner_name
     test_game = Game.new(2)
-    skelly = test_game.board.place(owner: '1', type: 'skeleton', x: 1, y: 1)
+    skelly = test_game.place(owner: '1', type: 'skeleton', x: 1, y: 1)
     test_output = StringIO.new(test_game.board.render_board)
     value = "🟩🟩\n🟩s1"
     assert_equal value, test_output.string

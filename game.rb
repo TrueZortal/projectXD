@@ -3,6 +3,7 @@
 require_relative 'field'
 require_relative 'minion'
 require_relative 'board'
+require_relative 'player'
 
 class InvalidMovementError < StandardError
 end
@@ -13,11 +14,15 @@ end
 class InvalidTargetError < StandardError
 end
 
+class UnknownPlayerError < StandardError
+end
+
 class Game
-  attr_accessor :board
+  attr_accessor :board, :players
 
   def initialize(size_of_board)
     @board = Board.new(size_of_board)
+    @players = []
   end
 
   def move(from_position, to_position)
@@ -44,6 +49,18 @@ class Game
     check_field(to_position).occupant.health = target_health - damage
 
     perish_a_creature(to_position) if check_field(to_position).occupant.health <= 0
+  end
+
+  def add_player(player_name, max_mana: 0)
+    @players << Player.new(name: player_name, mana: max_mana)
+  end
+
+  def place(owner: '', type: '', x: nil, y: nil)
+    raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit
+
+    # check if owner has sufficient mana, return insufficient mana error
+
+    @board.state[x][y].occupant = Minion.new(owner: owner, type: type, x: x, y: y)
   end
 
   private
