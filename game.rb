@@ -28,6 +28,7 @@ class Game
     @players = []
   end
 
+  #this should most likely move to the minion class
   def move(from_position, to_position)
     raise InvalidMovementError unless from_position.distance(to_position) <= check_field(from_position).occupant.speed &&
                                       check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
@@ -36,6 +37,8 @@ class Game
     check_field(from_position).occupant = ''
   end
 
+
+  #this should most likely move to the minion class
   def attack(from_position, to_position)
     raise OutOfRangeError unless from_position.distance(to_position) <= check_field(from_position).occupant.range
 
@@ -54,7 +57,7 @@ class Game
     perish_a_creature(to_position) if check_field(to_position).occupant.health <= 0
   end
 
-  def add_player(player_name, max_mana: 1)
+  def add_player(player_name, max_mana: 0)
     raise DuplicatePlayerError unless @players.filter { |player| player.name == player_name}.empty?
 
     @players << Player.new(name: player_name, mana: max_mana)
