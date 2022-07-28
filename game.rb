@@ -28,11 +28,10 @@ class Game
     @players = []
   end
 
-  #this should most likely move to the minion class
   def move(from_position, to_position)
-    raise InvalidMovementError unless from_position.distance(to_position) <= check_field(from_position).occupant.speed &&
-                                      check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
+    raise InvalidMovementError unless check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
 
+    check_field(from_position).occupant.move(to_position)
     check_field(to_position).occupant = check_field(from_position).occupant
     check_field(from_position).occupant = ''
   end
@@ -40,19 +39,11 @@ class Game
 
   #this should most likely move to the minion class
   def attack(from_position, to_position)
-    raise OutOfRangeError unless from_position.distance(to_position) <= check_field(from_position).occupant.range
-
     raise InvalidTargetError unless check_field(to_position).is_occupied? && different_owners(
       from_position, to_position
     ) && valid_position(from_position) && valid_position(to_position)
 
-    target_health = check_field(to_position).occupant.health
-    target_defense = check_field(to_position).occupant.defense
-    attacker_attack = check_field(from_position).occupant.attack
-
-    damage = attacker_attack - target_defense > 1 ? attacker_attack - target_defense : 1
-
-    check_field(to_position).occupant.health = target_health - damage
+    check_field(from_position).occupant.attack_action(check_field(to_position).occupant)
 
     perish_a_creature(to_position) if check_field(to_position).occupant.health <= 0
   end

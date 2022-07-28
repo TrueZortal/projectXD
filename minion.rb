@@ -8,6 +8,9 @@
 
 require_relative 'position'
 
+class InvalidMovementError < StandardError
+end
+
 class Minion
   @@MINION_DATA = {
     'skeleton': { mana: 1, health: 5, attack: 1, defense: 0, speed: 1.5, initiative: 3, range: 1.5 }
@@ -27,5 +30,23 @@ class Minion
     @speed = @@MINION_DATA[@type.to_sym][:speed]
     @initiative = @@MINION_DATA[@type.to_sym][:initiative]
     @range = @@MINION_DATA[@type.to_sym][:range]
+  end
+
+  def move(to_position)
+    raise InvalidMovementError unless @position.distance(to_position) <= @speed
+
+    @position = to_position
+  end
+
+  def attack_action(another_minion)
+    raise OutOfRangeError unless @position.distance(another_minion.position) <= @range
+
+    target_health = another_minion.health
+    target_defense = another_minion.defense
+
+    #damage calculation is currently attack - defense but no less than 1
+    damage = @attack - target_defense > 1 ? @attack - target_defense : 1
+
+    another_minion.health = target_health - damage
   end
 end

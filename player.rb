@@ -1,3 +1,5 @@
+require_relative 'manapool'
+
 class Player
   attr_reader :name
   attr_accessor :manapool, :mana

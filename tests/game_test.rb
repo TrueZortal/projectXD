@@ -38,11 +38,23 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     test_game.add_player('P1')
+    skellys_first_position = Position.new(1,1)
     skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 1, y: 1)
     target_field = Position.new(2, 2)
     test_game.move(skelly.position, target_field)
     assert_equal skelly, test_game.board.check_field(target_field).occupant
-    assert_equal '', test_game.board.check_field(skelly.position).occupant
+    assert_equal '', test_game.board.check_field(skellys_first_position).occupant
+  end
+
+  def test_a_minions_position_updates_as_it_moves
+    test_game = Game.new(3)
+    test_game.add_player('P1')
+    skellys_first_position = Position.new(1,1)
+    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 1, y: 1)
+    target_field = Position.new(2, 2)
+    test_game.move(skelly.position, target_field)
+    assert_equal skelly, test_game.board.check_field(target_field).occupant
+    assert_equal target_field, test_game.board.check_field(target_field).occupant.position
   end
 
   def test_a_minion_cannot_move_out_of_bounds
