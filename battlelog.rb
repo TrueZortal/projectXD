@@ -10,8 +10,8 @@ class BattleLog
     @log << log_event
   end
 
-  def place(unit)
-    @log << "#{unit.owner} placed #{unit.type} on #{unit.position.to_a} for #{unit.mana_cost} mana. Health:#{unit.health}, Attack:#{unit.attack}, Defense:#{unit.defense}, Speed:#{unit.speed}"
+  def place(unit, mana_after_placing)
+    @log << "#{unit.owner} placed #{unit.type} on #{unit.position.to_a} for #{unit.mana_cost} mana, they have #{mana_after_placing} mana remaining. Health:#{unit.health}, Attack:#{unit.attack}, Defense:#{unit.defense}, Speed:#{unit.speed}"
   end
 
   def move(unit, to_position)
@@ -25,8 +25,8 @@ class BattleLog
 
   def print
     output = String.new("**#{@time.utc} BattleLog**\n",encoding: "UTF-8")
-    @log.each do |event|
-      output << "#{event}\n"
+    @log.each_with_index do |event, index|
+      output << "TURN #{index+1}:#{event}\n"
     end
     output << '------------'
     output

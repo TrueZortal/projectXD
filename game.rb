@@ -73,8 +73,21 @@ class Game
     raise InsufficientManaError unless minion_owner.mana >= summoned_minion.mana_cost
 
     minion_owner.mana -= summoned_minion.mana_cost
-    @log.place(summoned_minion)
+    @log.place(summoned_minion, minion_owner.mana)
     @board.state[x][y].occupant = summoned_minion
+  end
+
+  def start_a_two_player_game
+    puts "enter P1 name"
+    p1_name = gets
+    puts "enter P1 maximum mana"
+    p1_mana = gets.to_i
+    add_player(p1_name, max_mana: p1_mana)
+    puts "enter P2 name"
+    p2_name = gets
+    puts "enter P2 maximum mana"
+    p2_mana = gets.to_i
+    add_player(p2_name, max_mana: p2_mana)
   end
 
   private
@@ -99,3 +112,5 @@ class Game
     check_field(first_occupant_position_array).occupant.owner != check_field(second_occupant_position_array).occupant.owner
   end
 end
+
+# Game.new(8).start_a_two_player_game

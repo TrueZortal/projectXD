@@ -9,7 +9,7 @@ class RenderBoardTest < Minitest::Test
   def test_correctly_renders_2_x_2_board
     test = Board.new(2)
     test_output = StringIO.new(test.render_board)
-    value = "🟩🟩\n🟩🟩"
+    value = "  0 1\n0 🟩🟩\n1 🟩🟩"
     assert_equal value, test_output.string
   end
 
@@ -18,7 +18,8 @@ class RenderBoardTest < Minitest::Test
     test_game.add_player('1', max_mana: 5)
     skelly = test_game.place(owner: '1', type: 'skeleton', x: 1, y: 1)
     test_output = StringIO.new(test_game.board.render_board)
-    value = "🟩🟩\n🟩s1"
+    value = "  0 1\n0 🟩🟩\n1 🟩s1"
     assert_equal value, test_output.string
   end
 end
+

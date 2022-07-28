@@ -19,7 +19,7 @@ end
 class Board
   attr_reader :array_of_fields, :upper_limit
 
-  def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
+  def initialize(size_of_board_edge, uniform: false, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1
 
     @upper_limit = size_of_board_edge - 1

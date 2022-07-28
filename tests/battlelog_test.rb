@@ -34,7 +34,7 @@ class LogTest < Minitest::Test
     test_log.add(message)
     test_log.add(second_message)
     test_log.add(third_message)
-    expected_log = "**#{test_log.time.utc} BattleLog**\ntest log entry\nsecond test log entry\nthird test log entry\n------------"
+    expected_log = "**#{test_log.time.utc} BattleLog**\nTURN 1:test log entry\nTURN 2:second test log entry\nTURN 3:third test log entry\n------------"
     assert_equal expected_log, test_log.print
   end
 end
