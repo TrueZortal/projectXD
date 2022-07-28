@@ -45,9 +45,10 @@ class Minion
     target_health = another_minion.health
     target_defense = another_minion.defense
 
-    #damage calculation is currently attack - defense but no less than 1
+    # damage calculation is currently attack - defense but no less than 1
     damage = @attack - target_defense > 1 ? @attack - target_defense : 1
 
     another_minion.health = target_health - damage
+    damage
   end
 end

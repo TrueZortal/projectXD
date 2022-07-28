@@ -21,7 +21,7 @@ class GameTest < Minitest::Test
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
     assert_raises(InvalidPositionError) do
-      test_game.place(owner: 'P1',type: 'skeleton', x: 3, y: 2)
+      test_game.place(owner: 'P1', type: 'skeleton', x: 3, y: 2)
     end
   end
 
@@ -29,7 +29,7 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 2, y: 2)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 2, y: 2)
     test_field = Position.new(2, 2)
     assert_equal skelly, test_game.board.check_field(test_field).occupant
   end
@@ -38,8 +38,8 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
-    skellys_first_position = Position.new(1,1)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 1, y: 1)
+    skellys_first_position = Position.new(1, 1)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 1, y: 1)
     target_field = Position.new(2, 2)
     test_game.move(skelly.position, target_field)
     assert_equal skelly, test_game.board.check_field(target_field).occupant
@@ -49,8 +49,8 @@ class GameTest < Minitest::Test
   def test_a_minions_position_updates_as_it_moves
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
-    skellys_first_position = Position.new(1,1)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 1, y: 1)
+    skellys_first_position = Position.new(1, 1)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 1, y: 1)
     target_field = Position.new(2, 2)
     test_game.move(skelly.position, target_field)
     assert_equal skelly, test_game.board.check_field(target_field).occupant
@@ -61,7 +61,7 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
     assert_raises(InvalidPositionError) do
       test_game.board.move(skelly.position, Position.new(-1, -1))
     end
@@ -71,7 +71,7 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
     target_field = Position.new(2, 2)
     assert_raises(InvalidMovementError) do
       test_game.move(skelly.position, target_field)
@@ -89,8 +89,8 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
-    skellys_estranged_cousin_timmy = test_game.place(owner: 'P1',type: 'skeleton', x: 0, y: 1)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
+    skellys_estranged_cousin_timmy = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 1)
     assert_raises(InvalidMovementError) do
       test_game.move(skelly.position, skellys_estranged_cousin_timmy.position)
     end
@@ -102,7 +102,7 @@ class GameTest < Minitest::Test
     test_game.add_player('P2')
     skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
     skellys_sworn_enemy_kevin = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 1)
-    assert_raises (InvalidTargetError) do
+    assert_raises(InvalidTargetError) do
       test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
     end
   end
@@ -123,8 +123,8 @@ class GameTest < Minitest::Test
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
     test_game.add_player('P2', max_mana: 5)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
-    skellys_sworn_enemy_kevin = test_game.place(owner: 'P2',type: 'skeleton', x: 0, y: 2)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
+    skellys_sworn_enemy_kevin = test_game.place(owner: 'P2', type: 'skeleton', x: 0, y: 2)
     assert_raises(OutOfRangeError) do
       test_game.attack(skelly.position, skellys_sworn_enemy_kevin.position)
     end
@@ -134,7 +134,7 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
     suspicious_patch_of_grass = Position.new(0, 1)
     assert_raises(InvalidTargetError) do
       test_game.attack(skelly.position, suspicious_patch_of_grass)
@@ -145,7 +145,7 @@ class GameTest < Minitest::Test
     # skip
     test_game = Game.new(3)
     test_game.add_player('P1', max_mana: 5)
-    skelly = test_game.place(owner: 'P1',type: 'skeleton', x: 0, y: 0)
+    skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
     assert_raises(InvalidPositionError) do
       test_game.attack(skelly.position, Position.new(0, -1))
     end
@@ -181,7 +181,7 @@ class GameTest < Minitest::Test
   def test_game_cant_have_two_players_with_same_name
     test_game = Game.new(3)
     test_game.add_player('Mateusz')
-    assert_raises (DuplicatePlayerError) do
+    assert_raises(DuplicatePlayerError) do
       test_game.add_player('Mateusz')
     end
   end
@@ -190,20 +190,20 @@ class GameTest < Minitest::Test
     test_game = Game.new(3)
     test_game.add_player('Mateusz')
     test_game.add_player('Michal')
-    assert (test_game.players.all? { |player| player.instance_of?(Player)})
+    assert(test_game.players.all? { |player| player.instance_of?(Player) })
   end
 
   def test_players_can_have_manapools_when_added
     test_game = Game.new(3)
     test_game.add_player('Mateusz', max_mana: 5)
     test_game.add_player('Michal', max_mana: 5)
-    assert (test_game.players.all? { |player| player.mana != 0})
+    assert(test_game.players.all? { |player| player.mana != 0 })
   end
 
   def test_players_outside_of_the_game_cant_summon_minions
     # skip
     test_game = Game.new(3)
-    assert_raises (UnknownPlayerError) do
+    assert_raises(UnknownPlayerError) do
       test_game.place(owner: 'Mateusz', type: 'skeleton', x: 0, y: 0)
     end
   end
@@ -213,14 +213,14 @@ class GameTest < Minitest::Test
     test_player_name = 'Mateusz'
     test_game.add_player(test_player_name, max_mana: 5)
     test_game.place(owner: test_player_name, type: 'skeleton', x: 0, y: 0)
-    assert_equal 4, (test_game.players.select { |player| player.name == test_player_name}.first.mana)
+    assert_equal 4, test_game.players.select { |player| player.name == test_player_name }.first.mana
   end
 
   def test_cant_summon_minions_with_insufficient_mana
     test_game = Game.new(3)
     test_player_name = 'Mateusz'
     test_game.add_player(test_player_name, max_mana: 0)
-    assert_raises (InsufficientManaError) do
+    assert_raises(InsufficientManaError) do
       test_game.place(owner: test_player_name, type: 'skeleton', x: 0, y: 0)
     end
   end

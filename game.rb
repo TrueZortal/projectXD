@@ -4,6 +4,7 @@ require_relative 'field'
 require_relative 'minion'
 require_relative 'board'
 require_relative 'player'
+require_relative 'battlelog'
 
 class InvalidMovementError < StandardError
 end
@@ -24,36 +25,40 @@ class InsufficientManaError < StandardError
 end
 
 class Game
-  attr_accessor :board, :players
+  attr_accessor :board, :players, :log
 
   def initialize(size_of_board)
     @board = Board.new(size_of_board)
+    @log = BattleLog.new
     @players = []
   end
 
   def move(from_position, to_position)
-    raise InvalidMovementError unless check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
+    unless check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
+      raise InvalidMovementError
+    end
 
     check_field(from_position).occupant.move(to_position)
     check_field(to_position).occupant = check_field(from_position).occupant
     check_field(from_position).occupant = ''
   end
 
-
-  #this should most likely move to the minion class
   def attack(from_position, to_position)
     raise InvalidTargetError unless check_field(to_position).is_occupied? && different_owners(
       from_position, to_position
     ) && valid_position(from_position) && valid_position(to_position)
 
-    check_field(from_position).occupant.attack_action(check_field(to_position).occupant)
+    attacker = check_field(from_position).occupant
+    defender = check_field(to_position).occupant
+    damage = attacker.attack_action(defender)
 
     perish_a_creature(to_position) if check_field(to_position).occupant.health <= 0
+
+    @log.attack(attacker,defender,damage)
   end
 
   def add_player(player_name, max_mana: 0)
-
-    raise DuplicatePlayerError unless @players.filter { |player| player.name == player_name}.empty?
+    raise DuplicatePlayerError unless @players.filter { |player| player.name == player_name }.empty?
 
     @players << Player.new(name: player_name, mana: max_mana)
   end
@@ -63,12 +68,12 @@ class Game
 
     raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit
 
-
     summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y)
-    minion_owner = @players.filter { |player| player.name == owner}.first
+    minion_owner = @players.filter { |player| player.name == owner }.first
     raise InsufficientManaError unless minion_owner.mana >= summoned_minion.mana_cost
 
     minion_owner.mana -= summoned_minion.mana_cost
+    @log.place(summoned_minion)
     @board.state[x][y].occupant = summoned_minion
   end
 

@@ -8,6 +8,7 @@ require_relative 'position_test'
 require_relative 'render_board_test'
 require_relative 'player_test'
 require_relative 'manapool_test'
+require_relative 'battlelog_test'
 require 'minitest/autorun'
 
 Dir.glob('**/*Test.rb')

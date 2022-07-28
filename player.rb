@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'manapool'
 
 class Player
@@ -6,8 +8,7 @@ class Player
 
   def initialize(name: '', mana: 0)
     @name = name
-    @manapool = ManaPool.new(mana: mana) #tu tu tururu
+    @manapool = ManaPool.new(mana: mana) # tu tu tururu
     @mana = @manapool.mana
   end
-
 end
