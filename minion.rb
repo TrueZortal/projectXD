@@ -13,10 +13,10 @@ end
 
 class Minion
   @@MINION_DATA = {
-    'skeleton': { mana: 1, health: 5, attack: 1, defense: 0, speed: 1.5, initiative: 3, range: 1.5 }
+    'skeleton': { mana_cost: 1, health: 5, attack: 1, defense: 0, speed: 1.5, initiative: 3, range: 1.5 }
   }
   attr_accessor :attack, :defense, :health, :speed, :initiative, :range, :position
-  attr_reader :mana, :owner, :type
+  attr_reader :mana_cost, :owner, :type
 
   def initialize(x: nil, y: nil, owner: '', type: 'skeleton')
     raise ArgumentError unless @@MINION_DATA.keys.include?(type.to_sym)
@@ -30,6 +30,7 @@ class Minion
     @speed = @@MINION_DATA[@type.to_sym][:speed]
     @initiative = @@MINION_DATA[@type.to_sym][:initiative]
     @range = @@MINION_DATA[@type.to_sym][:range]
+    @mana_cost = @@MINION_DATA[@type.to_sym][:mana_cost]
   end
 
   def move(to_position)

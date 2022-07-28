@@ -20,6 +20,9 @@ end
 class DuplicatePlayerError < StandardError
 end
 
+class InsufficientManaError < StandardError
+end
+
 class Game
   attr_accessor :board, :players
 
@@ -49,6 +52,7 @@ class Game
   end
 
   def add_player(player_name, max_mana: 0)
+
     raise DuplicatePlayerError unless @players.filter { |player| player.name == player_name}.empty?
 
     @players << Player.new(name: player_name, mana: max_mana)
@@ -59,10 +63,12 @@ class Game
 
     raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit
 
-    # check if owner has sufficient mana, return insufficient mana error
+
     summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y)
     minion_owner = @players.filter { |player| player.name == owner}.first
-    minion_owner.mana -= 1
+    raise InsufficientManaError unless minion_owner.mana >= summoned_minion.mana_cost
+
+    minion_owner.mana -= summoned_minion.mana_cost
     @board.state[x][y].occupant = summoned_minion
   end
 
