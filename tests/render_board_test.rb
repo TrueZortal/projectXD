@@ -22,4 +22,3 @@ class RenderBoardTest < Minitest::Test
     assert_equal value, test_output.string
   end
 end
-

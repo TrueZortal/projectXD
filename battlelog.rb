@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BattleLog
   attr_accessor :log, :time
 
@@ -19,14 +21,14 @@ class BattleLog
   end
 
   def attack(unit, another_unit, damage)
-    message = another_unit.health - damage >= 0 ? "is at #{another_unit.health} health" : "perished"
+    message = another_unit.health - damage >= 0 ? "is at #{another_unit.health} health" : 'perished'
     @log << "#{unit.owner} attacked #{another_unit.owner}s #{another_unit.type} with their #{unit.type} from #{unit.position.to_a} to #{another_unit.position.to_a} causing #{damage} damage. #{another_unit.owner}s #{another_unit.type} #{message}"
   end
 
   def print
-    output = String.new("**#{@time.utc} BattleLog**\n",encoding: "UTF-8")
+    output = String.new("**#{@time.utc} BattleLog**\n", encoding: 'UTF-8')
     @log.each_with_index do |event, index|
-      output << "TURN #{index+1}:#{event}\n"
+      output << "TURN #{index + 1}:#{event}\n"
     end
     output << '------------'
     output

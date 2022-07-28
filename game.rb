@@ -54,7 +54,7 @@ class Game
 
     perish_a_creature(to_position) if check_field(to_position).occupant.health <= 0
 
-    @log.attack(attacker,defender,damage)
+    @log.attack(attacker, defender, damage)
   end
 
   def add_player(player_name, max_mana: 0)
@@ -66,7 +66,7 @@ class Game
   def place(owner: '', type: '', x: nil, y: nil)
     raise UnknownPlayerError unless @players.map { |player| player = player.name }.include?(owner)
 
-    raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit
+    raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit && @board.state[x][y].is_empty?
 
     summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y)
     minion_owner = @players.filter { |player| player.name == owner }.first

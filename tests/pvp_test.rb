@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require_relative '../pvp'
 
@@ -30,7 +32,5 @@ class PVPTest < Minitest::Test
     assert_equal 2, test_match.game.players.size
   end
 
-  def test_correctly_starts_first_turn_after_player_selection
-
-  end
+  def test_correctly_starts_first_turn_after_player_selection; end
 end
