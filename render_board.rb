@@ -25,7 +25,7 @@ class RenderBoard
     rendered_board.lines.each_with_index do |line, index|
       board_with_field_identifiers << ["#{index} #{line}"]
     end
-    board_with_field_identifiers.unshift("   #{(0..columns).to_a.join(" ")}\n")
+    board_with_field_identifiers.unshift("  #{(0..columns).to_a.join(" ")}\n")
     board_with_field_identifiers.join
   end
 end
