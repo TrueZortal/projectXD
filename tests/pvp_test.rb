@@ -5,7 +5,7 @@ require_relative '../pvp'
 
 class PVPTest < Minitest::Test
   def test_can_correctly_start_a_new_pvp_game
-    # skip
+    skip
     string_io = StringIO.new
     string_io.puts 'Mateusz'
     string_io.puts '10'
@@ -19,7 +19,7 @@ class PVPTest < Minitest::Test
   end
 
   def test_correctly_starts_a_new_game_with_default_number_of_players
-    # skip
+    skip
     string_io = StringIO.new
     string_io.puts 'Mateusz'
     string_io.puts '10'

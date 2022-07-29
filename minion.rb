@@ -5,6 +5,8 @@
 # 1.5 -> 1 straight, 1 diagonal,
 # 2 -> 2 straight, 1 diagonal,
 # 2.83 -> 2 straight, 2 diagonal
+# 3 -> 3 straight, 2 across
+# 4.25 -> 3 straight, 3 across
 
 require_relative 'position'
 
@@ -13,7 +15,8 @@ end
 
 class Minion
   @@MINION_DATA = {
-    'skeleton': { mana_cost: 1, health: 5, attack: 1, defense: 0, speed: 1.5, initiative: 3, range: 1.5 }
+    'skeleton': { mana_cost: 1, health: 5, attack: 1, defense: 0, speed: 1.5, initiative: 3, range: 1.5 },
+    'skeleton archer': { mana_cost: 2, health: 2, attack: 2, defense: 0, speed: 1, initiative: 3, range: 3}
   }
   attr_accessor :attack, :defense, :health, :speed, :initiative, :range, :position
   attr_reader :mana_cost, :owner, :type
@@ -26,7 +29,8 @@ class Minion
     @type = type
     @attack = @@MINION_DATA[@type.to_sym][:attack]
     @defense = @@MINION_DATA[@type.to_sym][:defense]
-    @health = @@MINION_DATA[@type.to_sym][:health]
+    @max_health = @@MINION_DATA[@type.to_sym][:health]
+    @health = @max_health
     @speed = @@MINION_DATA[@type.to_sym][:speed]
     @initiative = @@MINION_DATA[@type.to_sym][:initiative]
     @range = @@MINION_DATA[@type.to_sym][:range]
@@ -50,5 +54,10 @@ class Minion
 
     another_minion.health = target_health - damage
     damage
+  end
+
+  def status
+    status = {pos: @position.to_a, type: @type, hp: "#{@health}/#{@max_health}", attack: @attack, defense: @defense}
+    status
   end
 end

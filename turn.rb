@@ -5,88 +5,132 @@ require_relative 'position'
 class Turn
   def initialize(game_instance)
     @game_instance = game_instance
-    order = game_instance.players.shuffle
-    puts @game_instance.board.render_board
-    order.each do |player|
+    set_turn_order
+    play_turn
+  end
+
+  private
+
+  def play_turn
+    @order.each do |player|
       puts "it's #{player.name}s move"
       if player.minions.empty?
-        puts "type your prefered action:\n'summon' a minion\n'concede'"
-        ans = gets.chomp.downcase
-        case ans
-        when 'summon'
-          begin
-            puts "which minion do you want to summon? available: 'skeleton'"
-            minion = gets.chomp.downcase
-            puts "which field do you want to place your minion? format 'x,y'"
-            field = gets.split(',')
-            @game_instance.place(owner: player.name, type: minion, x: field[0].to_i, y: field[1].to_i)
-            puts "placed a #{minion} on #{field}"
-            puts @game_instance.board.render_board
-          rescue StandardError
-            retry
-          end
-        when 'concede'
-          puts 'you lose kek'
-          player.mana = 0
-          player.minions = []
-        else
-          puts 'nothing selected, please enter a valid command'
-          redo
-        end
+        actions_if_player_has_no_minions(player)
       elsif !player.minions.empty?
-        puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
-        ans = gets.chomp.downcase
-        case ans
-        when 'summon'
-          begin
-            puts "which minion do you want to summon? available: 'skeleton'"
-            minion = gets.chomp.downcase
-            puts "which field do you want to place your minion? format 'x,y'"
-            field = gets.split(',')
-            @game_instance.place(owner: player.name, type: minion, x: field[0].to_i, y: field[1].to_i)
-            puts "placed a #{minion} on #{field}"
-            puts @game_instance.board.render_board
-          rescue StandardError
-            retry
-          end
-        when 'move'
-          begin
-            puts "which field do you want start the movement? format 'x,y'"
-            from = gets.split(',')
-            from_field = Position.new(from[0].to_i, from[1].to_i)
-            puts "which field do you want to move to? format 'x,y'"
-            to = gets.split(',')
-            to_field = Position.new(to[0].to_i, to[1].to_i)
-            @game_instance.move(from_field, to_field)
-            puts "moved from #{from_field.to_a} to #{to_field.to_a}"
-            puts @game_instance.board.render_board
-          rescue StandardError
-            retry
-          end
-        when 'attack'
-          begin
-            puts "which field do you want to attack from? format 'x,y'"
-            from = gets.split(',')
-            from_field = Position.new(from[0].to_i, from[1].to_i)
-            puts "which field do you want to attack? format 'x,y'"
-            to = gets.split(',')
-            to_field = Position.new(to[0].to_i, to[1].to_i)
-            @game_instance.attack(from_field, to_field)
-            puts "attacked from #{from_field.to_a} to #{to_field.to_a}"
-            puts @game_instance.board.render_board
-          rescue StandardError
-            retry
-          end
-        when 'concede'
-          puts 'you lose kek'
-          player.mana = 0
-          player.minions = []
-          break
-        else
-          puts 'nothing selected, please enter a valid command'
-          redo
-        end
+        actions_if_player_has_minions_available(player)
       end
     end
   end
+
+  def actions_if_player_has_no_minions(player_instance_of_current_player)
+    puts "type your prefered action:\n'summon' a minion\n'concede'"
+    ans = gets.chomp.downcase
+    case ans
+    when 'summon'
+      summon(player_instance_of_current_player)
+    when 'concede'
+      concede(player_instance_of_current_player)
+    else
+      puts 'nothing selected, please enter a valid command'
+      actions_if_player_has_no_minions(player_instance_of_current_player)
+    end
+  end
+
+  def actions_if_player_has_minions_available(player_instance_of_current_player)
+    puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
+    ans = gets.chomp.downcase
+    case ans
+    when 'summon'
+      summon(player_instance_of_current_player)
+    when 'move'
+      move(player_instance_of_current_player)
+    when 'attack'
+      attack(player_instance_of_current_player)
+    when 'concede'
+      concede(player_instance_of_current_player)
+    else
+      puts 'nothing selected, please enter a valid command'
+      actions_if_player_has_minions_available(player_instance_of_current_player)
+    end
+  end
+
+  def summon(player_instance_of_current_player)
+    puts "which minion do you want to summon? available: #{player_instance_of_current_player.available_minions}"
+    minion = get_input
+    puts "which field do you want to place your minion? format 'x,y'"
+    field = get_position
+    @game_instance.place(owner: player_instance_of_current_player.name, type: minion, x: field[0].to_i,
+                         y: field[1].to_i)
+    puts "#{player_instance_of_current_player.name} has placed a #{minion} on #{field}"
+    show_boardstate
+  rescue StandardError
+    retry
+  end
+
+
+  def attack(player_instance_of_current_player)
+    puts "which minion would you like to attack with? enter minion number to proceed"
+    create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
+    minion_number = get_input.to_i
+    from_field = get_position_from_minion_number(minion_number)
+    puts "which field do you want to attack? format 'x,y'"
+    to = get_position
+    to_field = Position.new(to[0].to_i, to[1].to_i)
+    @game_instance.attack(from_field, to_field)
+    puts "#{player_instance_of_current_player.name}s #{player_instance_of_current_player.minions[minion_number].type} attacked the enemy in the field #{to_field.to_a}, it's current status is:\n#{@game_instance.board.check_field(to_field).occupant.status}"
+    show_boardstate
+    rescue StandardError
+      actions_if_player_has_minions_available(player_instance_of_current_player)
+  end
+
+  def move(player_instance_of_current_player)
+    puts "which minion would you like to move with? enter minion number to proceed"
+    create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
+    minion_number = get_input.to_i
+    from_field = get_position_from_minion_number(minion_number)
+    puts "which field do you want to move to? format 'x,y'"
+    to = get_position
+    to_field = Position.new(to[0].to_i, to[1].to_i)
+    @game_instance.move(from_field, to_field)
+    puts "moved from #{from_field.to_a} to #{to_field.to_a}"
+    show_boardstate
+  rescue StandardError
+    actions_if_player_has_minions_available(player_instance_of_current_player)
+  end
+
+  def get_position_from_minion_number(minion_number_symbol_within_the_menu_hash)
+    position = Position.new(@minion_menu[minion_number_symbol_within_the_menu_hash][:pos].to_a[0],@minion_menu[minion_number_symbol_within_the_menu_hash][:pos].to_a[1])
+    return position
+  end
+
+  def create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
+    @minion_menu = {}
+    player_instance_of_current_player.minions.each_with_index do |minion,index|
+      @minion_menu[index] = minion.status
+    end
+    puts @minion_menu
+  end
+
+  def concede(player_instance_of_current_player)
+    puts 'you lose kek'
+    player_instance_of_current_player.mana = 0
+    player_instance_of_current_player.minions = []
+  end
+
+  def get_position
+    gets.chomp.split(',')
+  end
+
+  def get_input
+    gets.chomp.downcase
+  end
+
+  def show_boardstate
+    puts @game_instance.board.render_board
+  end
+
+  def set_turn_order
+    @order = @game_instance.players.shuffle
+  end
 end
+

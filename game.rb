@@ -40,6 +40,7 @@ class Game
 
     check_field(from_position).occupant.move(to_position)
     check_field(to_position).occupant = check_field(from_position).occupant
+    @log.move(check_field(from_position).occupant,to_position)
     check_field(from_position).occupant = ''
   end
 
@@ -75,6 +76,7 @@ class Game
     minion_owner.mana -= summoned_minion.mana_cost
     minion_owner.minions << summoned_minion
 
+    @log.place(summoned_minion, minion_owner.mana)
     @board.state[x][y].occupant = summoned_minion
   end
 
@@ -88,7 +90,6 @@ class Game
     @board.valid_position(position)
   end
 
-  # returns perished minion/creature for future logging purpose
   def perish_a_creature(position)
     minion = check_field(position).occupant
     minion_owner = @players.filter { |player| player.name == check_field(position).occupant.owner }.first
