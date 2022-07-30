@@ -27,8 +27,8 @@ end
 class Game
   attr_accessor :board, :players, :log
 
-  def initialize(size_of_board)
-    @board = Board.new(size_of_board)
+  def initialize(size_of_board, uniform: true)
+    @board = Board.new(size_of_board, uniform: uniform)
     @log = BattleLog.new
     @players = []
   end

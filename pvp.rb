@@ -6,8 +6,8 @@ require_relative 'turn'
 class PVP
   attr_accessor :game
 
-  def initialize(players: 2, board_size: 4)
-    @game = Game.new(board_size)
+  def initialize(players: 2, board_size: 4, uniform: false)
+    @game = Game.new(board_size, uniform: false)
     @players = players
     populate_players
     show_boardstate
@@ -64,4 +64,4 @@ class PVP
   end
 end
 
-PVP.new
+PVP.new(players: 2, board_size: 8, uniform: false)
