@@ -6,7 +6,7 @@ require_relative 'turn'
 class PVP
   attr_accessor :game
 
-  def initialize(players: 2, board_size: 8)
+  def initialize(players: 2, board_size: 4)
     @game = Game.new(board_size)
     @players = players
     populate_players

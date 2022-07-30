@@ -19,7 +19,7 @@ class Minion
     'skeleton archer': { mana_cost: 2, health: 2, attack: 2, defense: 0, speed: 1, initiative: 3, range: 3}
   }
   attr_accessor :attack, :defense, :health, :speed, :initiative, :range, :position
-  attr_reader :mana_cost, :owner, :type
+  attr_reader :mana_cost, :owner, :type, :current_health
 
   def initialize(x: nil, y: nil, owner: '', type: 'skeleton')
     raise ArgumentError unless @@MINION_DATA.keys.include?(type.to_sym)
@@ -31,10 +31,12 @@ class Minion
     @defense = @@MINION_DATA[@type.to_sym][:defense]
     @max_health = @@MINION_DATA[@type.to_sym][:health]
     @health = @max_health
+    @current_health = "#{@health}/#{@max_health}"
     @speed = @@MINION_DATA[@type.to_sym][:speed]
     @initiative = @@MINION_DATA[@type.to_sym][:initiative]
     @range = @@MINION_DATA[@type.to_sym][:range]
     @mana_cost = @@MINION_DATA[@type.to_sym][:mana_cost]
+
   end
 
   def move(to_position)
@@ -52,12 +54,17 @@ class Minion
     # damage calculation is currently attack - defense but no less than 1
     damage = @attack - target_defense > 1 ? @attack - target_defense : 1
 
-    another_minion.health = target_health - damage
+    another_minion.take_damage(damage)
     damage
   end
 
+  def take_damage(damage)
+    @health -= damage
+    @current_health = "#{@health}/#{@max_health}"
+  end
+
   def status
-    status = {pos: @position.to_a, type: @type, hp: "#{@health}/#{@max_health}", attack: @attack, defense: @defense}
+    status = {pos: @position.to_a, type: @type, hp: @current_health, attack: @attack, defense: @defense}
     status
   end
 end

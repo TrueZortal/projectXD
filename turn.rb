@@ -14,7 +14,9 @@ class Turn
   def play_turn
     @order.each do |player|
       puts "it's #{player.name}s move"
-      if player.minions.empty?
+    if player.minions.empty? && player.mana
+    elsif
+    elsif player.minions.empty?
         actions_if_player_has_no_minions(player)
       elsif !player.minions.empty?
         actions_if_player_has_minions_available(player)
@@ -33,6 +35,22 @@ class Turn
     else
       puts 'nothing selected, please enter a valid command'
       actions_if_player_has_no_minions(player_instance_of_current_player)
+    end
+  end
+
+  def actions_if_player_has_no_mana_available(player_instance_of_current_player)
+    puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
+    ans = gets.chomp.downcase
+    case ans
+    when 'move'
+      move(player_instance_of_current_player)
+    when 'attack'
+      attack(player_instance_of_current_player)
+    when 'concede'
+      concede(player_instance_of_current_player)
+    else
+      puts 'nothing selected, please enter a valid command'
+      actions_if_player_has_no_mana_available(player_instance_of_current_player)
     end
   end
 
@@ -77,7 +95,8 @@ class Turn
     to = get_position
     to_field = Position.new(to[0].to_i, to[1].to_i)
     @game_instance.attack(from_field, to_field)
-    puts "#{player_instance_of_current_player.name}s #{player_instance_of_current_player.minions[minion_number].type} attacked the enemy in the field #{to_field.to_a}, it's current status is:\n#{@game_instance.board.check_field(to_field).occupant.status}"
+    @game_instance.board.check_field(to_field).is_occupied? ? status_message = "it's current status is:\n#{@game_instance.board.check_field(to_field).occupant.status}" : status_message = "it has perished"
+    puts "#{player_instance_of_current_player.name}s #{player_instance_of_current_player.minions[minion_number].type} attacked the enemy in the field #{to_field.to_a}, #{status_message}"
     show_boardstate
     rescue StandardError
       actions_if_player_has_minions_available(player_instance_of_current_player)

@@ -14,8 +14,14 @@ class ManaPoolTest < Minitest::Test
     assert_equal 5, test_pool.max
   end
 
-  def test_new_manapool_has_a_current_value
+  def test_new_manapool_has_a_value
     test_pool = ManaPool.new(mana: 5)
     assert_equal 5, test_pool.mana
+  end
+
+  def test_manapool_current_can_be_accessed_via_current_method
+    test_pool = ManaPool.new(mana: 5)
+    expected = "5/5"
+    assert_equal expected, test_pool.current
   end
 end
