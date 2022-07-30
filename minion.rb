@@ -16,7 +16,7 @@ end
 class Minion
   # 🏹💀🐉
   @@MINION_DATA = {
-    'skeleton': { mana_cost: 1, symbol: 's',health: 5, attack: 1, defense: 0, speed: 1.5, initiative: 3, range: 1.5 },
+    'skeleton': { mana_cost: 1, symbol: 's',health: 5, attack: 1, defense: 0, speed: 2, initiative: 3, range: 1.5 },
     'skeleton archer': { mana_cost: 2, symbol: 'a', health: 2, attack: 2, defense: 0, speed: 1, initiative: 3, range: 3 }
   }
   attr_accessor :attack, :defense, :health, :speed, :initiative, :range, :position

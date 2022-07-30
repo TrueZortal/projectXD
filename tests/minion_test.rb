@@ -38,7 +38,7 @@ class MinionTest < Minitest::Test
     assert_equal 1, skelly.attack
     assert_equal 0, skelly.defense
     assert_equal 5, skelly.health
-    assert_equal 1.5, skelly.speed
+    assert_equal 2, skelly.speed
   end
 
   def test_cant_create_a_minion_of_non_existent_type

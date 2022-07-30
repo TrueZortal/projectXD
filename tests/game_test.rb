@@ -67,19 +67,21 @@ class GameTest < Minitest::Test
     end
   end
 
-  def test_skeletons_can_only_move_1_square_in_every_direction
+  def test_skeletons_can_only_move_1_square_diagonally_and_2_straight
     # skip
-    test_game = Game.new(3)
+    test_game = Game.new(4)
     test_game.add_player('P1', max_mana: 5)
     skelly = test_game.place(owner: 'P1', type: 'skeleton', x: 0, y: 0)
     target_field = Position.new(2, 2)
     assert_raises(InvalidMovementError) do
       test_game.move(skelly.position, target_field)
     end
-    target_field = Position.new(0, 2)
+    target_field = Position.new(0, 3)
     assert_raises(InvalidMovementError) do
       test_game.move(skelly.position, target_field)
     end
+    target_field = Position.new(0, 2)
+    test_game.move(skelly.position, target_field)
     target_field = Position.new(1, 1)
     test_game.move(skelly.position, target_field)
     assert_equal skelly, test_game.board.check_field(target_field).occupant

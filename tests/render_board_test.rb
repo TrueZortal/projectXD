@@ -28,7 +28,7 @@ class RenderBoardTest < Minitest::Test
     test_game.add_player('1', max_mana: 5)
     skelly = test_game.place(owner: '1', type: 'skeleton', x: 1, y: 0)
     test_output = StringIO.new(test_game.board.render_board)
-    puts test_game.board.render_board
+    # puts test_game.board.render_board
     value = "  0 1\n0 🟩s1\n1 🟩🟩"
     assert_equal value, test_output.string
   end
