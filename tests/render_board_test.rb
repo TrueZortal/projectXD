@@ -53,6 +53,4 @@ class RenderBoardTest < Minitest::Test
     value = "  0 1 2 3\n0 s1s1s1s1\n1 s1🟩🟩s1\n2 s1🟩🟩s1\n3 s1s1s1s1"
     assert_equal value, test_output.string
   end
-
-
 end

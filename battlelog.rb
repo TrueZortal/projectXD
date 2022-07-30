@@ -21,7 +21,7 @@ class BattleLog
   end
 
   def attack(unit, another_unit, damage)
-    message = another_unit.health - damage >= 0 ? "has #{another_unit.current_health} health" : 'perished'
+    message = another_unit.health - damage > 0 ? "has #{another_unit.current_health} health" : 'perished'
     @log << "#{unit.owner} attacked #{another_unit.owner}s #{another_unit.type} with their #{unit.type} from #{unit.position.to_a} to #{another_unit.position.to_a} causing #{damage} damage. #{another_unit.owner}s #{another_unit.type} #{message}"
   end
 
