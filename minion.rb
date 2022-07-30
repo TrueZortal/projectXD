@@ -14,12 +14,13 @@ class InvalidMovementError < StandardError
 end
 
 class Minion
+  # 🏹💀🐉
   @@MINION_DATA = {
-    'skeleton': { mana_cost: 1, health: 5, attack: 1, defense: 0, speed: 1.5, initiative: 3, range: 1.5 },
-    'skeleton archer': { mana_cost: 2, health: 2, attack: 2, defense: 0, speed: 1, initiative: 3, range: 3 }
+    'skeleton': { mana_cost: 1, symbol: 's',health: 5, attack: 1, defense: 0, speed: 1.5, initiative: 3, range: 1.5 },
+    'skeleton archer': { mana_cost: 2, symbol: 'a', health: 2, attack: 2, defense: 0, speed: 1, initiative: 3, range: 3 }
   }
   attr_accessor :attack, :defense, :health, :speed, :initiative, :range, :position
-  attr_reader :mana_cost, :owner, :type, :current_health
+  attr_reader :mana_cost, :owner, :type, :current_health, :symbol
 
   def initialize(x: nil, y: nil, owner: '', type: 'skeleton')
     raise ArgumentError unless @@MINION_DATA.keys.include?(type.to_sym)
@@ -27,6 +28,7 @@ class Minion
     @position = Position.new(x, y)
     @owner = owner
     @type = type
+    @symbol = @@MINION_DATA[@type.to_sym][:symbol]
     @attack = @@MINION_DATA[@type.to_sym][:attack]
     @defense = @@MINION_DATA[@type.to_sym][:defense]
     @max_health = @@MINION_DATA[@type.to_sym][:health]

@@ -13,7 +13,7 @@ class RenderBoard
     rowified_board.each_with_index do |row, index|
       row.each do |field|
         rendered_board << if field.is_occupied?
-                            field.occupant.type.chr + field.occupant.owner.chr
+                            field.occupant.symbol + field.occupant.owner.chr
                           else
                             @@RENDER_KEY[field.terrain.to_sym]
                           end

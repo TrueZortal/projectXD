@@ -13,7 +13,7 @@ class BattleLog
   end
 
   def place(unit, mana_after_placing)
-    @log << "#{unit.owner} placed #{unit.type} on #{unit.position.to_a} for #{unit.mana_cost} mana, they have #{mana_after_placing} mana remaining. Health:#{unit.health}, Attack:#{unit.attack}, Defense:#{unit.defense}, Speed:#{unit.speed}"
+    @log << "#{unit.owner} placed #{unit.type} on #{unit.position.to_a} for #{unit.mana_cost} mana, they have #{mana_after_placing} mana remaining."
   end
 
   def move(unit, to_position)
@@ -21,7 +21,7 @@ class BattleLog
   end
 
   def attack(unit, another_unit, damage)
-    message = another_unit.health - damage >= 0 ? "is at #{another_unit.health} health" : 'perished'
+    message = another_unit.health - damage >= 0 ? "has #{another_unit.current_health} health" : 'perished'
     @log << "#{unit.owner} attacked #{another_unit.owner}s #{another_unit.type} with their #{unit.type} from #{unit.position.to_a} to #{another_unit.position.to_a} causing #{damage} damage. #{another_unit.owner}s #{another_unit.type} #{message}"
   end
 

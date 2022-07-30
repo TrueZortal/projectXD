@@ -89,12 +89,13 @@ class Board
 
   def rowify_the_array_of_fields
     @rowified_board = []
-    Math.sqrt(@array_of_fields.size).to_i.times do |row_index|
-      row_index = []
-      @rowified_board << row_index
+    Math.sqrt(@array_of_fields.size).to_i.times do
+      empty_column = []
+      @rowified_board << empty_column
     end
     @array_of_fields.each do |field|
       @rowified_board[field.position.x] << field
     end
+    @rowified_board
   end
 end
