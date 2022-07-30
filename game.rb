@@ -40,7 +40,7 @@ class Game
 
     check_field(from_position).occupant.move(to_position)
     check_field(to_position).occupant = check_field(from_position).occupant
-    @log.move(check_field(from_position).occupant,to_position)
+    @log.move(check_field(from_position).occupant, to_position)
     check_field(from_position).occupant = ''
   end
 
@@ -73,8 +73,8 @@ class Game
     minion_owner = @players.filter { |player| player.name == owner }.first
     raise InsufficientManaError unless minion_owner.mana >= summoned_minion.mana_cost
 
-    minion_owner.mana -= summoned_minion.mana_cost
-    minion_owner.minions << summoned_minion
+    minion_owner.manapool.spend(summoned_minion.mana_cost)
+    minion_owner.add_minion(summoned_minion)
 
     @log.place(summoned_minion, minion_owner.mana)
     @board.state[x][y].occupant = summoned_minion

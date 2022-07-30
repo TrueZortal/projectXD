@@ -19,4 +19,11 @@ class PlayerTest < Minitest::Test
     assert_instance_of ManaPool, test_player.manapool
     assert_equal 10, test_player.mana
   end
+
+  def test_minion_list_returns_an_empty_list_if_no_minions
+    test_player = Player.new(name: 'Mateusz', mana: 10)
+    test_status = test_player.status
+    expected_status = "\nMana:10/10 \nCurrent Minions: none"
+    assert_equal expected_status, test_status
+  end
 end

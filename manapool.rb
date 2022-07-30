@@ -8,4 +8,13 @@ class ManaPool
     @mana = @max
     @current = "#{@mana}/#{@max}"
   end
+
+  def spend(mana)
+    @mana -= mana
+    @current = "#{@mana}/#{@max}"
+  end
+
+  def empty?
+    @mana.zero?
+  end
 end

@@ -33,7 +33,7 @@ class PVP
       puts "it's a draw. Would you like to see the combat log? yes/no"
       query_log_view
     else
-      puts "#{winner[0].name} is victorious, would you like to see the combat log? yes/no"# save it in a file for later gloating"
+      puts "#{winner[0].name} is victorious, would you like to see the combat log? yes/no" # save it in a file for later gloating"
     end
     query_log_view
   end

@@ -13,10 +13,12 @@ class Turn
 
   def play_turn
     @order.each do |player|
-      puts "it's #{player.name}s move"
-    if player.minions.empty? && player.mana
-    elsif
-    elsif player.minions.empty?
+      puts "it's #{player.name}s move. #{player.status}"
+      if player.minions.empty? && player.manapool.empty?
+        break
+      elsif player.manapool.empty?
+        actions_if_player_has_no_mana_available(player)
+      elsif player.minions.empty?
         actions_if_player_has_no_minions(player)
       elsif !player.minions.empty?
         actions_if_player_has_minions_available(player)
@@ -39,7 +41,7 @@ class Turn
   end
 
   def actions_if_player_has_no_mana_available(player_instance_of_current_player)
-    puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
+    puts "type your prefered action:\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
     ans = gets.chomp.downcase
     case ans
     when 'move'
@@ -79,15 +81,14 @@ class Turn
     field = get_position
     @game_instance.place(owner: player_instance_of_current_player.name, type: minion, x: field[0].to_i,
                          y: field[1].to_i)
-    puts "#{player_instance_of_current_player.name} has placed a #{minion} on #{field}"
+    print_last_log_message
     show_boardstate
   rescue StandardError
     retry
   end
 
-
   def attack(player_instance_of_current_player)
-    puts "which minion would you like to attack with? enter minion number to proceed"
+    puts 'which minion would you like to attack with? enter minion number to proceed'
     create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
     minion_number = get_input.to_i
     from_field = get_position_from_minion_number(minion_number)
@@ -95,15 +96,14 @@ class Turn
     to = get_position
     to_field = Position.new(to[0].to_i, to[1].to_i)
     @game_instance.attack(from_field, to_field)
-    @game_instance.board.check_field(to_field).is_occupied? ? status_message = "it's current status is:\n#{@game_instance.board.check_field(to_field).occupant.status}" : status_message = "it has perished"
-    puts "#{player_instance_of_current_player.name}s #{player_instance_of_current_player.minions[minion_number].type} attacked the enemy in the field #{to_field.to_a}, #{status_message}"
+    print_last_log_message
     show_boardstate
-    rescue StandardError
-      actions_if_player_has_minions_available(player_instance_of_current_player)
+  rescue StandardError
+    actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def move(player_instance_of_current_player)
-    puts "which minion would you like to move with? enter minion number to proceed"
+    puts 'which minion would you like to move with? enter minion number to proceed'
     create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
     minion_number = get_input.to_i
     from_field = get_position_from_minion_number(minion_number)
@@ -111,20 +111,20 @@ class Turn
     to = get_position
     to_field = Position.new(to[0].to_i, to[1].to_i)
     @game_instance.move(from_field, to_field)
-    puts "moved from #{from_field.to_a} to #{to_field.to_a}"
+    print_last_log_message
     show_boardstate
   rescue StandardError
     actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def get_position_from_minion_number(minion_number_symbol_within_the_menu_hash)
-    position = Position.new(@minion_menu[minion_number_symbol_within_the_menu_hash][:pos].to_a[0],@minion_menu[minion_number_symbol_within_the_menu_hash][:pos].to_a[1])
-    return position
+    Position.new(@minion_menu[minion_number_symbol_within_the_menu_hash][:pos].to_a[0],
+                 @minion_menu[minion_number_symbol_within_the_menu_hash][:pos].to_a[1])
   end
 
   def create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
     @minion_menu = {}
-    player_instance_of_current_player.minions.each_with_index do |minion,index|
+    player_instance_of_current_player.minions.each_with_index do |minion, index|
       @minion_menu[index] = minion.status
     end
     puts @minion_menu
@@ -134,6 +134,10 @@ class Turn
     puts 'you lose kek'
     player_instance_of_current_player.mana = 0
     player_instance_of_current_player.minions = []
+  end
+
+  def print_last_log_message
+    puts @game_instance.log.log.last
   end
 
   def get_position
@@ -152,4 +156,3 @@ class Turn
     @order = @game_instance.players.shuffle
   end
 end
-

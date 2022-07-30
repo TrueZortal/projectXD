@@ -21,7 +21,12 @@ class ManaPoolTest < Minitest::Test
 
   def test_manapool_current_can_be_accessed_via_current_method
     test_pool = ManaPool.new(mana: 5)
-    expected = "5/5"
+    expected = '5/5'
     assert_equal expected, test_pool.current
+  end
+
+  def test_manapool_currently_shows_as_empty
+    test_pool = ManaPool.new
+    assert test_pool.empty?
   end
 end
