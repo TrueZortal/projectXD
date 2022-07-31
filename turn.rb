@@ -127,7 +127,9 @@ class Turn
     player_instance_of_current_player.minions.each_with_index do |minion, index|
       @minion_menu[index] = minion.status
     end
-    puts @minion_menu
+    @minion_menu.each_pair do |id, status|
+      puts "#{id} : #{status}"
+    end
   end
 
   def concede(player_instance_of_current_player)
