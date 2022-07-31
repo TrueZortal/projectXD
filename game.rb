@@ -58,16 +58,21 @@ class Game
     @log.attack(attacker, defender, damage)
   end
 
-  def add_player(player_name, max_mana: 0)
+  def add_player(player_name, max_mana: 0, summoning_zone: nil)
     raise DuplicatePlayerError unless @players.filter { |player| player.name == player_name }.empty?
 
-    @players << Player.new(name: player_name, mana: max_mana)
+    starting_zone = summoning_zone.nil? ? @board.grab_a_starting_summoning_zone : summoning_zone
+    @players << Player.new(name: player_name, mana: max_mana, summoning_zone: starting_zone)
   end
 
   def place(owner: '', type: '', x: nil, y: nil)
     raise UnknownPlayerError unless @players.map { |player| player = player.name }.include?(owner)
 
-    raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit && @board.state[x][y].is_empty?
+    raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit && @board.state[x][y].is_empty? && @players.filter do |player|
+                                        player.name == owner
+                                      end.first.summoning_zone.include?([
+                                                                          x, y
+                                                                        ])
 
     summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y)
     minion_owner = @players.filter { |player| player.name == owner }.first

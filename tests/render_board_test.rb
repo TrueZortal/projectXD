@@ -25,7 +25,7 @@ class RenderBoardTest < Minitest::Test
   def test_a_placed_minion_renders_with_its_first_letter_as_symbol_and_owner_name
     # skip
     test_game = Game.new(2)
-    test_game.add_player('1', max_mana: 5)
+    test_game.add_player('1', max_mana: 5, summoning_zone: [[0, 0], [0, 1], [1, 0], [1, 1]])
     skelly = test_game.place(owner: '1', type: 'skeleton', x: 1, y: 0)
     test_output = StringIO.new(test_game.board.render_board)
     # puts test_game.board.render_board
@@ -36,7 +36,7 @@ class RenderBoardTest < Minitest::Test
   def test_a_minions_are_placed_in_the_correct_rendered_positions
     # skip
     test_game = Game.new(4)
-    test_game.add_player('1', max_mana: 12)
+    test_game.add_player('1', max_mana: 12, summoning_zone: [[0, 0], [0, 1], [0, 2], [0, 3], [1, 0], [1, 1], [1, 2], [1, 3], [2, 0], [2, 1], [2, 2], [2, 3], [3, 0], [3, 1], [3, 2], [3, 3]])
     test_game.place(owner: '1', type: 'skeleton', x: 3, y: 0)
     test_game.place(owner: '1', type: 'skeleton', x: 3, y: 1)
     test_game.place(owner: '1', type: 'skeleton', x: 3, y: 2)

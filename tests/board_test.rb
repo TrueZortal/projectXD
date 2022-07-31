@@ -27,4 +27,11 @@ class BoardTest < Minitest::Test
     test = Board.new(8)
     assert_equal 7, test.upper_limit
   end
+
+  def test_board_correctly_finds_starting_zone_positions
+    test = Board.new(8)
+    expected = [[[0, 0], [0, 1], [1, 0], [1, 1]], [[0, 6], [0, 7], [1, 6], [1, 7]], [[6, 6], [6, 7], [7, 6], [7, 7]],
+                [[6, 0], [6, 1], [7, 0], [7, 1]]]
+    assert_empty test.starting_summoning_zones.map { |zone| zone.map(&:to_a) } - expected
+  end
 end

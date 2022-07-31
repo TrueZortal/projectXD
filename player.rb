@@ -4,14 +4,15 @@ require_relative 'manapool'
 
 class Player
   attr_reader :name
-  attr_accessor :manapool, :mana, :minions, :available_minions
+  attr_accessor :manapool, :mana, :minions, :available_minions, :summoning_zone
 
-  def initialize(name: '', mana: 0)
+  def initialize(name: '', mana: 0, summoning_zone: [])
     @name = name
     @manapool = ManaPool.new(mana: mana) # tu tu tururu
     @mana = @manapool.mana
     @minions = []
     @available_minions = ['skeleton', 'skeleton archer']
+    @summoning_zone = summoning_zone
   end
 
   def status
@@ -21,6 +22,20 @@ class Player
   def add_minion(minion_instance)
     @mana = @manapool.mana
     @minions << minion_instance
+  end
+
+  def print_selectable_hash_of_unliving_minions
+    @minion_menu = {}
+    @minions.each_with_index do |minion, index|
+      @minion_menu[index] = minion.status
+    end
+    @minion_menu.each_pair do |id, status|
+      puts "#{id} : #{status}"
+    end
+  end
+
+  def get_position_from_minion_number(minion_number)
+    @minions[minion_number].position
   end
 
   private

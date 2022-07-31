@@ -75,7 +75,7 @@ class Turn
   end
 
   def summon(player_instance_of_current_player)
-    puts "which minion do you want to summon? available: #{player_instance_of_current_player.available_minions}"
+    puts "which minion do you want to summon? available: #{player_instance_of_current_player.available_minions}\n#{@game_instance.board.zone_message(player_instance_of_current_player.summoning_zone)}"
     minion = get_input
     puts "which field do you want to place your minion? format 'x,y'"
     field = get_position
@@ -89,9 +89,9 @@ class Turn
 
   def attack(player_instance_of_current_player)
     puts 'which minion would you like to attack with? enter minion number to proceed'
-    create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
+    player_instance_of_current_player.print_selectable_hash_of_unliving_minions
     minion_number = get_input.to_i
-    from_field = get_position_from_minion_number(minion_number)
+    from_field = player_instance_of_current_player.get_position_from_minion_number(minion_number)
     puts "which field do you want to attack? format 'x,y'"
     to = get_position
     to_field = Position.new(to[0].to_i, to[1].to_i)
@@ -104,9 +104,9 @@ class Turn
 
   def move(player_instance_of_current_player)
     puts 'which minion would you like to move with? enter minion number to proceed'
-    create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
+    player_instance_of_current_player.print_selectable_hash_of_unliving_minions
     minion_number = get_input.to_i
-    from_field = get_position_from_minion_number(minion_number)
+    from_field = player_instance_of_current_player.get_position_from_minion_number(minion_number)
     puts "which field do you want to move to? format 'x,y'"
     to = get_position
     to_field = Position.new(to[0].to_i, to[1].to_i)
@@ -115,21 +115,6 @@ class Turn
     show_boardstate
   rescue StandardError
     actions_if_player_has_minions_available(player_instance_of_current_player)
-  end
-
-  def get_position_from_minion_number(minion_number_symbol_within_the_menu_hash)
-    Position.new(@minion_menu[minion_number_symbol_within_the_menu_hash][:pos].to_a[0],
-                 @minion_menu[minion_number_symbol_within_the_menu_hash][:pos].to_a[1])
-  end
-
-  def create_selectable_hash_of_players_unliving_minions(player_instance_of_current_player)
-    @minion_menu = {}
-    player_instance_of_current_player.minions.each_with_index do |minion, index|
-      @minion_menu[index] = minion.status
-    end
-    @minion_menu.each_pair do |id, status|
-      puts "#{id} : #{status}"
-    end
   end
 
   def concede(player_instance_of_current_player)
