@@ -36,7 +36,8 @@ class RenderBoardTest < Minitest::Test
   def test_a_minions_are_placed_in_the_correct_rendered_positions
     # skip
     test_game = Game.new(4)
-    test_game.add_player('1', max_mana: 12, summoning_zone: [[0, 0], [0, 1], [0, 2], [0, 3], [1, 0], [1, 1], [1, 2], [1, 3], [2, 0], [2, 1], [2, 2], [2, 3], [3, 0], [3, 1], [3, 2], [3, 3]])
+    test_game.add_player('1', max_mana: 12,
+                              summoning_zone: [[0, 0], [0, 1], [0, 2], [0, 3], [1, 0], [1, 1], [1, 2], [1, 3], [2, 0], [2, 1], [2, 2], [2, 3], [3, 0], [3, 1], [3, 2], [3, 3]])
     test_game.place(owner: '1', type: 'skeleton', x: 3, y: 0)
     test_game.place(owner: '1', type: 'skeleton', x: 3, y: 1)
     test_game.place(owner: '1', type: 'skeleton', x: 3, y: 2)

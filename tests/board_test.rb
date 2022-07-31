@@ -20,7 +20,7 @@ class BoardTest < Minitest::Test
 
   def test_creates_a_custom_sized_board
     test = Board.new(5)
-    assert_equal 25, test.array_of_fields.size
+    assert_equal 25, test.rowified_board.flatten.size
   end
 
   def test_board_gives_correct_limit
@@ -33,5 +33,12 @@ class BoardTest < Minitest::Test
     expected = [[[0, 0], [0, 1], [1, 0], [1, 1]], [[0, 6], [0, 7], [1, 6], [1, 7]], [[6, 6], [6, 7], [7, 6], [7, 7]],
                 [[6, 0], [6, 1], [7, 0], [7, 1]]]
     assert_empty test.starting_summoning_zones.map { |zone| zone.map(&:to_a) } - expected
+  end
+
+  def test_board_correctly_identifies_starting_zones_and_acreage
+    test = Board.new(8)
+    expected = 'Your summoning zone is top left and has a size of 2x2 squares'
+    zone = [[0, 0], [1, 1]]
+    assert_equal expected, test.zone_message(zone)
   end
 end
