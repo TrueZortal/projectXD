@@ -64,4 +64,4 @@ class PVP
   end
 end
 
-PVP.new(players: 2, board_size: 8, uniform: false)
+PVP.new(players: 2, board_size: 4, uniform: false)

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'field'
 require_relative 'render_board'
 require_relative 'generate_board'
 
@@ -16,18 +15,19 @@ end
 class InvalidPositionError < StandardError
 end
 
-# working surface for board is @rowified_board, might want to possibly separate Creating the board from the board class
+# working surface for board is @rowified_board, Observers are empowered via @array_of_fields
 class Board
-  attr_reader :upper_limit
+  attr_reader :upper_limit, :array_of_fields
   attr_accessor :rowified_board
 
   def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1
 
-    @rowified_board = GenerateBoard.new(size_of_board_edge, uniform, starting_surface).rowified
+    board = GenerateBoard.new(size_of_board_edge, uniform, starting_surface)
+    @array_of_fields = board.array_of_fields
+    @rowified_board = board.rowified
     @size_of_board_edge = size_of_board_edge
     @upper_limit = @size_of_board_edge - 1
-
     starting_summoning_zones
   end
 

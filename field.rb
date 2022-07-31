@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require 'observer'
 require_relative 'position'
 
 class Field
+  include Observable
   attr_accessor :status, :terrain, :obstacle, :occupant
   attr_reader :position
 
@@ -12,6 +14,12 @@ class Field
     @occupant = occupant
     @terrain = terrain
     @obstacle = obstacle
+  end
+
+  def update_occupant(new_occupant)
+    @occupant = new_occupant
+    changed
+    notify_observers(@position, is_occupied?)
   end
 
   def is_occupied?

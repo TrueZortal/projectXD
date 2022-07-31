@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require_relative 'field'
+require 'observer'
 
 class InvalidMovementError < StandardError
 end
@@ -13,7 +16,7 @@ class InvalidPositionError < StandardError
 end
 
 class GenerateBoard
-  attr_accessor :rowified
+  attr_accessor :rowified, :array_of_fields
 
   def initialize(size_of_board_edge, uniform, starting_surface)
     raise ArgumentError unless size_of_board_edge > 1
@@ -25,7 +28,7 @@ class GenerateBoard
     rowify_the_array_of_fields
   end
 
-    private
+  private
 
   def generate_an_array_of_fields(size_of_board_edge)
     @array_of_fields = []
@@ -51,7 +54,7 @@ class GenerateBoard
       field_pool = []
       generation_key[@array_of_fields.last.terrain.to_sym].map do |terrain, weight|
         weight.times { field_pool << terrain }
-    end
+      end
       field_pool.sample
     end
   end
@@ -75,4 +78,3 @@ class GenerateBoard
     @rowified
   end
 end
-

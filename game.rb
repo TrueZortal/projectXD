@@ -38,10 +38,10 @@ class Game
       raise InvalidMovementError
     end
 
-    check_field(from_position).occupant.move(to_position)
-    check_field(to_position).occupant = check_field(from_position).occupant
     @log.move(check_field(from_position).occupant, to_position)
-    check_field(from_position).occupant = ''
+    check_field(from_position).occupant.move(to_position)
+    check_field(to_position).update_occupant(check_field(from_position).occupant)
+    check_field(from_position).update_occupant('')
   end
 
   def attack(from_position, to_position)
@@ -65,7 +65,7 @@ class Game
     @players << Player.new(name: player_name, mana: max_mana, summoning_zone: starting_zone)
   end
 
-  def place(owner: '', type: '', x: nil, y: nil)
+  def place(owner: '', type: '', x: nil, y: nil, board_fields: nil)
     raise UnknownPlayerError unless @players.map { |player| player = player.name }.include?(owner)
 
     raise InvalidPositionError unless x <= @board.upper_limit && y <= @board.upper_limit && @board.state[x][y].is_empty? && @players.filter do |player|
@@ -74,7 +74,7 @@ class Game
                                                                           x, y
                                                                         ])
 
-    summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y)
+    summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y, board_fields: @board.array_of_fields)
     minion_owner = @players.filter { |player| player.name == owner }.first
     raise InsufficientManaError unless minion_owner.mana >= summoned_minion.mana_cost
 
@@ -82,7 +82,8 @@ class Game
     minion_owner.add_minion(summoned_minion)
 
     @log.place(summoned_minion, minion_owner.mana)
-    @board.state[x][y].occupant = summoned_minion
+    @board.state[x][y].update_occupant(summoned_minion)
+    summoned_minion
   end
 
   private

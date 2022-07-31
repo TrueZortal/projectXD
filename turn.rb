@@ -20,6 +20,8 @@ class Turn
         actions_if_player_has_no_mana_available(player)
       elsif player.minions.empty?
         actions_if_player_has_no_minions(player)
+      elsif !player.minions.empty? && player.minions.any? { |minion| !minion.fields_with_enemies_in_range.empty? }
+        actions_if_player_has_minions_with_available_targets(player)
       elsif !player.minions.empty?
         actions_if_player_has_minions_available(player)
       end
@@ -46,8 +48,6 @@ class Turn
     case ans
     when 'move'
       move(player_instance_of_current_player)
-    when 'attack'
-      attack(player_instance_of_current_player)
     when 'concede'
       concede(player_instance_of_current_player)
     else
@@ -57,6 +57,22 @@ class Turn
   end
 
   def actions_if_player_has_minions_available(player_instance_of_current_player)
+    puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'concede'"
+    ans = gets.chomp.downcase
+    case ans
+    when 'summon'
+      summon(player_instance_of_current_player)
+    when 'move'
+      move(player_instance_of_current_player)
+    when 'concede'
+      concede(player_instance_of_current_player)
+    else
+      puts 'nothing selected, please enter a valid command'
+      actions_if_player_has_minions_available(player_instance_of_current_player)
+    end
+  end
+
+  def actions_if_player_has_minions_with_available_targets(player_instance_of_current_player)
     puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
     ans = gets.chomp.downcase
     case ans
@@ -73,6 +89,8 @@ class Turn
       actions_if_player_has_minions_available(player_instance_of_current_player)
     end
   end
+
+  private
 
   def summon(player_instance_of_current_player)
     puts "which minion do you want to summon? available: #{player_instance_of_current_player.available_minions}\n#{@game_instance.board.zone_message(player_instance_of_current_player.summoning_zone)}"
@@ -92,9 +110,10 @@ class Turn
     player_instance_of_current_player.print_selectable_hash_of_unliving_minions
     minion_number = get_input.to_i
     from_field = player_instance_of_current_player.get_position_from_minion_number(minion_number)
-    puts "which field do you want to attack? format 'x,y'"
-    to = get_position
-    to_field = Position.new(to[0].to_i, to[1].to_i)
+    puts "which target would you like to attack?"
+    player_instance_of_current_player.get_minion_from_minion_number(minion_number).print_selectable_hash_of_available_targets
+    target_number = get_input.to_i
+    to_field = player_instance_of_current_player.get_minion_from_minion_number(minion_number).fields_with_enemies_in_range[target_number].position
     @game_instance.attack(from_field, to_field)
     print_last_log_message
     show_boardstate

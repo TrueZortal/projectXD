@@ -38,6 +38,10 @@ class Player
     @minions[minion_number].position
   end
 
+  def get_minion_from_minion_number(minion_number)
+    @minions[minion_number]
+  end
+
   private
 
   def minion_list
