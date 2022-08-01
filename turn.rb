@@ -13,10 +13,11 @@ class Turn
 
   def play_turn
     @order.each do |player|
-      puts "it's #{player.name}s move. #{player.status}"
       if player.minions.empty? && player.manapool.empty?
-        break
-      elsif player.manapool.empty?
+        next
+      end
+      puts "it's #{player.name}s move. #{player.status}"
+      if player.manapool.empty?
         actions_if_player_has_no_mana_available(player)
       elsif player.minions.empty?
         actions_if_player_has_no_minions(player)
@@ -30,7 +31,7 @@ class Turn
 
   def actions_if_player_has_no_minions(player_instance_of_current_player)
     puts "type your prefered action:\n'summon' a minion\n'concede'"
-    ans = gets.chomp.downcase
+    ans = get_input
     case ans
     when 'summon'
       summon(player_instance_of_current_player)
@@ -44,7 +45,7 @@ class Turn
 
   def actions_if_player_has_no_mana_available(player_instance_of_current_player)
     puts "type your prefered action:\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
-    ans = gets.chomp.downcase
+    ans = get_input
     case ans
     when 'move'
       move(player_instance_of_current_player)
@@ -58,7 +59,7 @@ class Turn
 
   def actions_if_player_has_minions_available(player_instance_of_current_player)
     puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'concede'"
-    ans = gets.chomp.downcase
+    ans = get_input
     case ans
     when 'summon'
       summon(player_instance_of_current_player)
@@ -74,7 +75,7 @@ class Turn
 
   def actions_if_player_has_minions_with_available_targets(player_instance_of_current_player)
     puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
-    ans = gets.chomp.downcase
+    ans = get_input
     case ans
     when 'summon'
       summon(player_instance_of_current_player)
@@ -90,8 +91,6 @@ class Turn
     end
   end
 
-  private
-
   def summon(player_instance_of_current_player)
     puts "which minion do you want to summon? available: #{player_instance_of_current_player.available_minions}\n#{@game_instance.board.zone_message(player_instance_of_current_player.summoning_zone)}"
     minion = get_input
@@ -102,6 +101,7 @@ class Turn
     print_last_log_message
     show_boardstate
   rescue StandardError
+    puts error.backtrace
     retry
   end
 
@@ -110,7 +110,7 @@ class Turn
     player_instance_of_current_player.print_selectable_hash_of_unliving_minions
     minion_number = get_input.to_i
     from_field = player_instance_of_current_player.get_position_from_minion_number(minion_number)
-    puts "which target would you like to attack?"
+    puts 'which target would you like to attack?'
     player_instance_of_current_player.get_minion_from_minion_number(minion_number).print_selectable_hash_of_available_targets
     target_number = get_input.to_i
     to_field = player_instance_of_current_player.get_minion_from_minion_number(minion_number).fields_with_enemies_in_range[target_number].position
@@ -118,6 +118,7 @@ class Turn
     print_last_log_message
     show_boardstate
   rescue StandardError
+    puts error.backtrace
     actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
@@ -133,13 +134,14 @@ class Turn
     print_last_log_message
     show_boardstate
   rescue StandardError
+    puts error.backtrace
     actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def concede(player_instance_of_current_player)
-    puts 'you lose kek'
-    player_instance_of_current_player.mana = 0
-    player_instance_of_current_player.minions = []
+    @game_instance.concede(player_instance_of_current_player)
+    print_last_log_message
+    show_boardstate
   end
 
   def print_last_log_message

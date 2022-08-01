@@ -8,8 +8,6 @@
 # 3 -> 3 straight, 2 across
 # 4.25 -> 3 straight, 3 across
 
-
-
 require_relative 'position'
 
 class InvalidMovementError < StandardError
@@ -19,12 +17,12 @@ class Minion
   # 🏹💀🐉
 
   @@THRESHOLDS = {
-    1 => [1,0],
-    1.5 => [1,1],
-    2 => [2,1],
-    2.83 => [2,2],
-    3 => [3,2],
-    4.25 => [3,3]
+    1 => [1, 0],
+    1.5 => [1, 1],
+    2 => [2, 1],
+    2.83 => [2, 2],
+    3 => [3, 2],
+    4.25 => [3, 3]
   }
 
   @@MINION_DATA = {
@@ -57,7 +55,7 @@ class Minion
     add_observers
   end
 
-  def update(position_object, occupied)
+  def update(_position_object, _occupied)
     find_enemies_in_attack_range
     # test_print
   end
@@ -97,23 +95,24 @@ class Minion
   def print_selectable_hash_of_available_targets
     generate_selectable_hash_of_available_targets
   end
+
   private
 
   def find_fields_in_movement_range
     @fields_in_movement_range = []
-    if !@board_fields.nil?
-      @board_fields.filter { |field| field.position != @position && @position.distance(field.position) <= @speed}.each do |field|
-        @fields_in_movement_range << field
-      end
+    @board_fields&.filter do |field|
+      field.position != @position && @position.distance(field.position) <= @speed
+    end&.each do |field|
+      @fields_in_movement_range << field
     end
   end
 
   def find_and_update_fields_in_attack_range
     @fields_in_attack_range = []
-    if !@board_fields.nil?
-      @board_fields.filter { |field| field.position != @position && @position.distance(field.position) <= @range}.each do |field|
-        @fields_in_attack_range << field
-      end
+    @board_fields&.filter do |field|
+      field.position != @position && @position.distance(field.position) <= @range
+    end&.each do |field|
+      @fields_in_attack_range << field
     end
     @fields_in_attack_range.uniq!
   end
@@ -121,9 +120,7 @@ class Minion
   def find_enemies_in_attack_range
     @fields_with_enemies_in_range = []
     @fields_in_attack_range.each do |field|
-      if field.is_occupied? && field.occupant.owner != @owner
-        @fields_with_enemies_in_range << field
-      end
+      @fields_with_enemies_in_range << field if field.is_occupied? && field.occupant.owner != @owner
     end
     @fields_with_enemies_in_range.uniq!
   end
@@ -155,5 +152,4 @@ class Minion
     # p @fields_with_enemies_in_range.map { |field| field.position.to_a }
     # p @fields_in_attack_range.map { |field| field.position.to_a }
   end
-
 end

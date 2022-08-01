@@ -34,6 +34,14 @@ class Player
     end
   end
 
+  def clear_minions(board)
+    @minions.each do |minion|
+      board.check_field(minion.position).update_occupant('')
+      minion = nil
+    end
+    @minions = []
+  end
+
   def get_position_from_minion_number(minion_number)
     @minions[minion_number].position
   end
@@ -41,7 +49,6 @@ class Player
   def get_minion_from_minion_number(minion_number)
     @minions[minion_number]
   end
-
   private
 
   def minion_list

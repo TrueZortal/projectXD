@@ -25,6 +25,11 @@ class BattleLog
     @log << "#{unit.owner} attacked #{another_unit.owner}s #{another_unit.type} with their #{unit.type} from #{unit.position.to_a} to #{another_unit.position.to_a} causing #{damage} damage. #{another_unit.owner}s #{another_unit.type} #{message}"
   end
 
+  def concede(player)
+    minion_list = player.minions.map { |minion| minion.status }.join("\n")
+    @log << "#{player.name} has conceded, their minions #{minion_list} all perished"
+  end
+
   def print
     output = String.new("**#{@time.utc} BattleLog**\n", encoding: 'UTF-8')
     @log.each_with_index do |event, index|

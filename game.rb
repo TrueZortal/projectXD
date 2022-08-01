@@ -58,6 +58,12 @@ class Game
     @log.attack(attacker, defender, damage)
   end
 
+  def concede(player)
+    @log.concede(player)
+    player.clear_minions(@board)
+    player.manapool.empty
+  end
+
   def add_player(player_name, max_mana: 0, summoning_zone: nil)
     raise DuplicatePlayerError unless @players.filter { |player| player.name == player_name }.empty?
 

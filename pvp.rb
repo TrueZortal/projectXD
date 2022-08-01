@@ -6,7 +6,7 @@ require_relative 'turn'
 class PVP
   attr_accessor :game
 
-  def initialize(players: 2, board_size: 4, uniform: false)
+  def initialize(players: 2, board_size: 8, uniform: false)
     @game = Game.new(board_size, uniform: false)
     @players = players
     populate_players
@@ -32,7 +32,7 @@ class PVP
     if winner.empty?
       puts "it's a draw. Would you like to see the combat log? yes/no"
       query_log_view
-    else
+    elsif @game.players.filter { |player| !player.mana.zero? && !player.minions.empty? }.size == 1
       puts "#{winner[0].name} is victorious, would you like to see the combat log? yes/no" # save it in a file for later gloating"
     end
     query_log_view
@@ -52,7 +52,7 @@ class PVP
   end
 
   def gameplay_loop
-    Turn.new(@game) while @game.players.filter { |player| player.mana.zero? && player.minions.empty? }.empty?
+    Turn.new(@game) while @game.players.filter { |player| !player.mana.zero? && !player.minions.empty? }.size != 1
   end
 
   def get_input
@@ -63,5 +63,3 @@ class PVP
     puts @game.board.render_board
   end
 end
-
-PVP.new(players: 2, board_size: 4, uniform: false)
