@@ -34,7 +34,7 @@ class Game
   end
 
   def move(from_position, to_position)
-    unless check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
+    unless !check_field(to_position).obstacle && check_field(to_position).is_empty? && valid_position(from_position) && valid_position(to_position)
       raise InvalidMovementError
     end
 
@@ -117,7 +117,7 @@ class Game
     minion_owner.minions.delete(minion)
   end
 
-  #need to rewrite this for actual position objects
+  # need to rewrite this for actual position objects
   def different_owners(first_occupant_position_array, second_occupant_position_array)
     check_field(first_occupant_position_array).occupant.owner != check_field(second_occupant_position_array).occupant.owner
   end

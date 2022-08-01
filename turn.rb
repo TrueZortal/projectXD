@@ -22,7 +22,7 @@ class Turn
         actions_if_player_has_no_mana_available(player)
       elsif player.minions.empty?
         actions_if_player_has_no_minions(player)
-      elsif !player.minions.empty? && player.minions.any? { |minion| minion.can_attack }
+      elsif !player.minions.empty? && player.minions.any?(&:can_attack)
         actions_if_player_has_minions_with_available_targets(player)
       elsif !player.minions.empty?
         actions_if_player_has_minions_available(player)

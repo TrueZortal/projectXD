@@ -11,7 +11,7 @@ class FieldTest < Minitest::Test
     assert_equal 'empty', test.status
     assert_equal '', test.terrain
     assert_equal '', test.occupant
-    assert_equal '', test.obstacle
+    assert_equal false, test.obstacle
   end
 
   def test_can_create_a_new_field_with_custom_coordinates

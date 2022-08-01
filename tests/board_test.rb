@@ -28,13 +28,6 @@ class BoardTest < Minitest::Test
     assert_equal 7, test.upper_limit
   end
 
-  def test_board_correctly_finds_starting_zone_positions
-    test = Board.new(8)
-    expected = [[[0, 0], [0, 1], [1, 0], [1, 1]], [[0, 6], [0, 7], [1, 6], [1, 7]], [[6, 6], [6, 7], [7, 6], [7, 7]],
-                [[6, 0], [6, 1], [7, 0], [7, 1]]]
-    assert_empty test.starting_summoning_zones.map { |zone| zone.map(&:to_a) } - expected
-  end
-
   def test_board_correctly_identifies_starting_zones_and_acreage
     test = Board.new(8)
     expected = 'Your summoning zone is top left and has a size of 2x2 squares'

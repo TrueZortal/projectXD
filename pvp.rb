@@ -53,7 +53,7 @@ class PVP
   end
 
   def gameplay_loop
-    Turn.new(@game) while !@game.there_can_be_only_one
+    Turn.new(@game) until @game.there_can_be_only_one
   end
 
   def show_boardstate

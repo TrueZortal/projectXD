@@ -37,9 +37,7 @@ class Player
   def print_selectable_hash_of_unliving_minions_who_can_attack
     @minion_menu = {}
     @minions.each_with_index do |minion, index|
-      if minion.can_attack
-        @minion_menu[index] = minion.status
-      end
+      @minion_menu[index] = minion.status if minion.can_attack
     end
     @minion_menu.each_pair do |id, status|
       puts "#{id} : #{status}"
