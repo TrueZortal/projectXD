@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'pvp'
+require_relative 'inputs'
 
 class Menu
   def initialize
@@ -40,7 +41,7 @@ class Menu
               end
     PVP.new(players: players, board_size: board_size, uniform: uniform)
   rescue StandardError
-    puts "game crashed, restarting"
+    puts 'game crashed, restarting'
     puts error.backtrace
     retry
   end

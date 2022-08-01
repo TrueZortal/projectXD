@@ -2,6 +2,7 @@
 
 require_relative 'game'
 require_relative 'turn'
+require_relative 'inputs'
 
 class PVP
   attr_accessor :game
@@ -39,7 +40,7 @@ class PVP
   end
 
   def query_log_view
-    log_query = get_input
+    log_query = Inputs.get
     case log_query
     when 'yes'
       puts @game.log.print
@@ -53,10 +54,6 @@ class PVP
 
   def gameplay_loop
     Turn.new(@game) while @game.players.filter { |player| !player.mana.zero? && !player.minions.empty? }.size != 1
-  end
-
-  def get_input
-    gets.chomp.downcase
   end
 
   def show_boardstate

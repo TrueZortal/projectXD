@@ -26,7 +26,7 @@ class BattleLog
   end
 
   def concede(player)
-    minion_list = player.minions.map { |minion| minion.status }.join("\n")
+    minion_list = player.minions.map(&:status).join("\n")
     @log << "#{player.name} has conceded, their minions #{minion_list} all perished"
   end
 

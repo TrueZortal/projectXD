@@ -80,6 +80,7 @@ class Minion
     damage = @attack - target_defense > 1 ? @attack - target_defense : 1
 
     another_minion.take_damage(damage)
+    find_enemies_in_attack_range
     damage
   end
 
@@ -94,6 +95,10 @@ class Minion
 
   def print_selectable_hash_of_available_targets
     generate_selectable_hash_of_available_targets
+  end
+
+  def can_attack
+    !@fields_with_enemies_in_range.empty?
   end
 
   private

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'position'
+require_relative 'inputs'
 
 class Turn
   def initialize(game_instance)
@@ -13,15 +14,14 @@ class Turn
 
   def play_turn
     @order.each do |player|
-      if player.minions.empty? && player.manapool.empty?
-        next
-      end
+      next if player.minions.empty? && player.manapool.empty?
+
       puts "it's #{player.name}s move. #{player.status}"
       if player.manapool.empty?
         actions_if_player_has_no_mana_available(player)
       elsif player.minions.empty?
         actions_if_player_has_no_minions(player)
-      elsif !player.minions.empty? && player.minions.any? { |minion| !minion.fields_with_enemies_in_range.empty? }
+      elsif !player.minions.empty? && player.minions.any? { |minion| minion.can_attack }
         actions_if_player_has_minions_with_available_targets(player)
       elsif !player.minions.empty?
         actions_if_player_has_minions_available(player)
@@ -31,7 +31,7 @@ class Turn
 
   def actions_if_player_has_no_minions(player_instance_of_current_player)
     puts "type your prefered action:\n'summon' a minion\n'concede'"
-    ans = get_input
+    ans = Inputs.get
     case ans
     when 'summon'
       summon(player_instance_of_current_player)
@@ -45,7 +45,7 @@ class Turn
 
   def actions_if_player_has_no_mana_available(player_instance_of_current_player)
     puts "type your prefered action:\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
-    ans = get_input
+    ans = Inputs.get
     case ans
     when 'move'
       move(player_instance_of_current_player)
@@ -59,7 +59,7 @@ class Turn
 
   def actions_if_player_has_minions_available(player_instance_of_current_player)
     puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'concede'"
-    ans = get_input
+    ans = Inputs.get
     case ans
     when 'summon'
       summon(player_instance_of_current_player)
@@ -75,7 +75,7 @@ class Turn
 
   def actions_if_player_has_minions_with_available_targets(player_instance_of_current_player)
     puts "type your prefered action:\n'summon' a minion\n'move' from a field to a field\n'attack' from a field to a field\n'concede'"
-    ans = get_input
+    ans = Inputs.get
     case ans
     when 'summon'
       summon(player_instance_of_current_player)
@@ -93,48 +93,48 @@ class Turn
 
   def summon(player_instance_of_current_player)
     puts "which minion do you want to summon? available: #{player_instance_of_current_player.available_minions}\n#{@game_instance.board.zone_message(player_instance_of_current_player.summoning_zone)}"
-    minion = get_input
+    minion = Inputs.get
     puts "which field do you want to place your minion? format 'x,y'"
-    field = get_position
+    field = Inputs.get_position
     @game_instance.place(owner: player_instance_of_current_player.name, type: minion, x: field[0].to_i,
                          y: field[1].to_i)
     print_last_log_message
     show_boardstate
   rescue StandardError
-    puts error.backtrace
-    retry
+    # puts error.backtrace
+    summon(player_instance_of_current_player)
   end
 
   def attack(player_instance_of_current_player)
     puts 'which minion would you like to attack with? enter minion number to proceed'
-    player_instance_of_current_player.print_selectable_hash_of_unliving_minions
-    minion_number = get_input.to_i
+    player_instance_of_current_player.print_selectable_hash_of_unliving_minions_who_can_attack
+    minion_number = Inputs.get.to_i
     from_field = player_instance_of_current_player.get_position_from_minion_number(minion_number)
     puts 'which target would you like to attack?'
     player_instance_of_current_player.get_minion_from_minion_number(minion_number).print_selectable_hash_of_available_targets
-    target_number = get_input.to_i
+    target_number = Inputs.get.to_i
     to_field = player_instance_of_current_player.get_minion_from_minion_number(minion_number).fields_with_enemies_in_range[target_number].position
     @game_instance.attack(from_field, to_field)
     print_last_log_message
     show_boardstate
   rescue StandardError
-    puts error.backtrace
+    # puts error.backtrace
     actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def move(player_instance_of_current_player)
     puts 'which minion would you like to move with? enter minion number to proceed'
     player_instance_of_current_player.print_selectable_hash_of_unliving_minions
-    minion_number = get_input.to_i
+    minion_number = Inputs.get.to_i
     from_field = player_instance_of_current_player.get_position_from_minion_number(minion_number)
     puts "which field do you want to move to? format 'x,y'"
-    to = get_position
+    to = Inputs.get_position
     to_field = Position.new(to[0].to_i, to[1].to_i)
     @game_instance.move(from_field, to_field)
     print_last_log_message
     show_boardstate
   rescue StandardError
-    puts error.backtrace
+    # puts error.backtrace
     actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
@@ -146,14 +146,6 @@ class Turn
 
   def print_last_log_message
     puts @game_instance.log.log.last
-  end
-
-  def get_position
-    gets.chomp.split(',')
-  end
-
-  def get_input
-    gets.chomp.downcase
   end
 
   def show_boardstate

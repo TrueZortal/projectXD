@@ -34,6 +34,18 @@ class Player
     end
   end
 
+  def print_selectable_hash_of_unliving_minions_who_can_attack
+    @minion_menu = {}
+    @minions.each_with_index do |minion, index|
+      if minion.can_attack
+        @minion_menu[index] = minion.status
+      end
+    end
+    @minion_menu.each_pair do |id, status|
+      puts "#{id} : #{status}"
+    end
+  end
+
   def clear_minions(board)
     @minions.each do |minion|
       board.check_field(minion.position).update_occupant('')
@@ -49,6 +61,7 @@ class Player
   def get_minion_from_minion_number(minion_number)
     @minions[minion_number]
   end
+
   private
 
   def minion_list

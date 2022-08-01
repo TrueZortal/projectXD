@@ -105,7 +105,7 @@ class Game
   def perish_a_creature(position)
     minion = check_field(position).occupant
     minion_owner = @players.filter { |player| player.name == check_field(position).occupant.owner }.first
-    check_field(position).occupant = ''
+    check_field(position).update_occupant('')
     minion_owner.minions.delete(minion)
   end
 
