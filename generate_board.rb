@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'field'
-require 'observer'
+# require 'observer'
 
 class InvalidMovementError < StandardError
 end

@@ -92,6 +92,14 @@ class Game
     summoned_minion
   end
 
+  def there_can_be_only_one
+    remaining_players.size == 1
+  end
+
+  def remaining_players
+    (@players - @players.filter { |player| player.manapool.empty? && player.minions.empty? })
+  end
+
   private
 
   def check_field(position)
@@ -109,6 +117,7 @@ class Game
     minion_owner.minions.delete(minion)
   end
 
+  #need to rewrite this for actual position objects
   def different_owners(first_occupant_position_array, second_occupant_position_array)
     check_field(first_occupant_position_array).occupant.owner != check_field(second_occupant_position_array).occupant.owner
   end

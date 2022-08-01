@@ -3,6 +3,10 @@ class Inputs
     call_gets.downcase
   end
 
+  def self.get_raw
+    call_gets
+  end
+
   def self.get_position
   call_gets.split(',')
   end

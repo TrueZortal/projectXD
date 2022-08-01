@@ -21,19 +21,19 @@ class PVP
   def populate_players
     @players.times do |index|
       puts "enter P#{index + 1} name"
-      name = gets.chomp
+      name = Inputs.get_raw
       puts "enter P#{index + 1} maximum mana"
-      mana = gets.chomp.to_i
+      mana = Inputs.get.to_i
       @game.add_player(name, max_mana: mana)
     end
   end
 
   def resolve_skirmish
-    winner = @game.players - @game.players.filter { |player| player.mana.zero? && player.minions.empty? }
+    winner = @game.remaining_players
     if winner.empty?
       puts "it's a draw. Would you like to see the combat log? yes/no"
       query_log_view
-    elsif @game.players.filter { |player| !player.mana.zero? && !player.minions.empty? }.size == 1
+    elsif @game.there_can_be_only_one
       puts "#{winner[0].name} is victorious, would you like to see the combat log? yes/no" # save it in a file for later gloating"
     end
     query_log_view
@@ -53,7 +53,7 @@ class PVP
   end
 
   def gameplay_loop
-    Turn.new(@game) while @game.players.filter { |player| !player.mana.zero? && !player.minions.empty? }.size != 1
+    Turn.new(@game) while !@game.there_can_be_only_one
   end
 
   def show_boardstate

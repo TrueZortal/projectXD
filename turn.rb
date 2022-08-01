@@ -15,6 +15,7 @@ class Turn
   def play_turn
     @order.each do |player|
       next if player.minions.empty? && player.manapool.empty?
+      next if @game_instance.there_can_be_only_one
 
       puts "it's #{player.name}s move. #{player.status}"
       if player.manapool.empty?
