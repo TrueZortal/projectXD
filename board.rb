@@ -2,7 +2,6 @@
 
 require_relative 'render_board'
 require_relative 'generate_board'
-require_relative 'calculations'
 
 class InvalidMovementError < StandardError
 end
