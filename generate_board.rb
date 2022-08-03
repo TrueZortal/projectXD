@@ -2,7 +2,6 @@
 
 require_relative 'field'
 require_relative 'calculations'
-# require 'observer'
 
 class InvalidMovementError < StandardError
 end
