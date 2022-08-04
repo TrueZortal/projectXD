@@ -134,9 +134,9 @@ class Turn
     @game_instance.move(from_field, to_field)
     print_last_log_message
     show_boardstate
-  rescue StandardError
-    # puts error.backtrace
-    actions_if_player_has_minions_available(player_instance_of_current_player)
+    # rescue StandardError
+    #   # puts error.backtrace
+    #   actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def concede(player_instance_of_current_player)

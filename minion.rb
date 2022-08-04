@@ -27,7 +27,7 @@ class Minion
 
   @@MINION_DATA = {
     'skeleton': { mana_cost: 1, symbol: 's', health: 5, attack: 1, defense: 0, speed: 2, initiative: 3, range: 1.5 },
-    'skeleton archer': { mana_cost: 2, symbol: 'a', health: 2, attack: 2, defense: 0, speed: 1, initiative: 3,
+    'skeleton archer': { mana_cost: 2, symbol: 'a', health: 2, attack: 2, defense: 0, speed: 4.25, initiative: 3,
                          range: 3 }
   }
   attr_accessor :attack, :defense, :health, :speed, :initiative, :range, :position
@@ -122,12 +122,32 @@ class Minion
     @fields_in_attack_range.uniq!
   end
 
+  def find_fields_between_self_and_target(field)
+    array_of_bidrectional_route_coordinates = @position.get_valid_routes(field.position)
+    biderctional_array_of_route_fields = []
+    array_of_bidrectional_route_coordinates.each do |array_of_coordinates|
+      biderctional_array_of_route_fields << @board_fields.filter do |route_field|
+        array_of_coordinates.include?(route_field.position.to_a)
+      end
+    end
+    biderctional_array_of_route_fields
+  end
+
   def find_enemies_in_attack_range
     @fields_with_enemies_in_range = []
     @fields_in_attack_range.each do |field|
       @fields_with_enemies_in_range << field if field.is_occupied? && field.occupant.owner != @owner
     end
-    @fields_with_enemies_in_range.uniq!
+    unless fields_with_enemies_in_range.empty?
+      @fields_with_enemies_in_range.filter! do |field|
+        find_fields_between_self_and_target(field).any? do |array_of_coordinates|
+          array_of_coordinates.all? do |field_on_the_way_to_the_other_field|
+            field_on_the_way_to_the_other_field.obstacle == false
+          end
+        end
+      end
+    end
+    @fields_with_enemies_in_range
   end
 
   def add_observers
@@ -150,11 +170,5 @@ class Minion
     target_menu.each_pair do |id, status|
       puts "#{id} : #{status}"
     end
-  end
-
-  def test_print
-    # puts "#{@owner}#{@position.to_a}#{@type}"
-    # p @fields_with_enemies_in_range.map { |field| field.position.to_a }
-    # p @fields_in_attack_range.map { |field| field.position.to_a }
   end
 end

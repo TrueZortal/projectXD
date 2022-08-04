@@ -22,60 +22,40 @@ class Position
     Math.sqrt((other_position.x - x)**2 + (other_position.y - y)**2)
   end
 
+  def get_valid_routes(other_position)
+    valid_routes = []
+    valid_routes << get_route_to(other_position)
+    valid_routes << other_position.get_route_to(self)
+    valid_routes
+  end
+
   def get_route_to(other_position)
-    other_x = other_position.x
-    other_y = other_position.y
+    relative_position = distance_between_position_arrays_as_relative_position_array(other_position.to_a)
     @coordinates_between = []
-    @distance_between_x = @x - other_x
-    @distance_between_y = @y - other_y
-    mod = 1
-    until @distance_between_x.zero? && @distance_between_y.zero?
-      #to write a function that counts steps but grabs out modified target coordinates based on the change to the distances
+    temp_position = other_position.to_a
+    until relative_position == [0, 0]
+      change_of_x = decide_modifier(relative_position[0])
+      change_of_y = decide_modifier(relative_position[1])
+      temp_position = [temp_position[0] + change_of_x, temp_position[1] + change_of_y]
+      @coordinates_between << temp_position
+      relative_position = distance_between_position_arrays_as_relative_position_array(temp_position)
     end
+    @coordinates_between - [@to_a]
+  end
+
+  private
+
+  def decide_modifier(value)
+    if value.negative?
+      -1
+    elsif value.positive?
+      1
+    else
+      0
+    end
+  end
+
+  def distance_between_position_arrays_as_relative_position_array(other_position_array)
+    [@x - other_position_array[0], @y - other_position_array[1]]
+  end
 end
-
-# Position.new(4, 4).get_route_to(Position.new(7, 4))
-# Position.new(0,0).get_route_to(Position.new(3,0))
-# p Position.new(0,0).distance(Position.new(1,2))
-# p Position.new(0,0).get_route_to(Position.new(3,1))
-# p Position.new(0,0).get_route_to(Position.new(4,5))
-
-# until @distance_between_x.zero? && @distance_between_y.zero?
-#   puts "before operation #{[@distance_between_x, @distance_between_y]}"
-#   if mod > 10
-#     break
-#   elsif @distance_between_x > @distance_between_y
-#     @coordinates_between << [0, mod]
-#     @distance_between_y += mod
-#     if @distance_between_x == @distance_between_y && [@distance_between_x,@distance_between_y] != [0,0]
-#       inner_loop(mod)
-#     end
-#     mod += 1
-#   elsif @distance_between_x < @distance_between_y
-#     @coordinates_between << [mod, 0]
-#     @distance_between_x += mod
-#     if @distance_between_x == @distance_between_y && [@distance_between_x,@distance_between_y] != [0,0]
-#       inner_loop(mod)
-#     end
-#     mod += 1
-#   elsif @distance_between_x == @distance_between_y
-#     @coordinates_between << [mod, mod]
-#     @distance_between_x += mod
-#     @distance_between_y += mod
-#     mod += 1
-#   end
-#   puts "after operation #{[@distance_between_x, @distance_between_y]}"
-# end
-# p @coordinates_between.map { |array| array = [array[0] += @x, array[1] += @y] }
-# end
-
-# def inner_loop(mod)
-# temp_mod = mod
-#   until @distance_between_x == @x && @distance_between_y == @y
-#     temp_mod += 1
-#     @coordinates_between << [temp_mod, temp_mod]
-#     @distance_between_x += mod
-#     @distance_between_y += mod
-#     # mod += 1
-#   end
-# end
