@@ -57,7 +57,6 @@ class Minion
 
   def update(_position_object, _occupied)
     find_enemies_in_attack_range
-    # test_print
   end
 
   def move(to_position)
@@ -68,7 +67,6 @@ class Minion
     find_and_update_fields_in_attack_range
     find_enemies_in_attack_range
     add_observers
-    # test_print
   end
 
   def attack_action(another_minion)
