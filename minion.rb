@@ -139,15 +139,19 @@ class Minion
       @fields_with_enemies_in_range << field if field.is_occupied? && field.occupant.owner != @owner
     end
     unless fields_with_enemies_in_range.empty?
-      @fields_with_enemies_in_range.filter! do |field|
-        find_fields_between_self_and_target(field).any? do |array_of_coordinates|
-          array_of_coordinates.all? do |field_on_the_way_to_the_other_field|
-            field_on_the_way_to_the_other_field.obstacle == false
-          end
+      check_if_interaction_with_field_is_not_blocked_by_obstacles(@fields_with_enemies_in_range)
+    end
+    @fields_with_enemies_in_range
+  end
+
+  def check_if_interaction_with_field_is_not_blocked_by_obstacles(array_of_fields)
+    array_of_fields.filter! do |field|
+      find_fields_between_self_and_target(field).any? do |array_of_coordinates|
+        array_of_coordinates.all? do |field_on_the_way_to_the_other_field|
+          field_on_the_way_to_the_other_field.obstacle == false
         end
       end
     end
-    @fields_with_enemies_in_range
   end
 
   def add_observers
