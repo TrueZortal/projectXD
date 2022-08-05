@@ -9,6 +9,7 @@
 # 4.25 -> 3 straight, 3 across
 
 require_relative 'position'
+require_relative 'pathfinding'
 
 class InvalidMovementError < StandardError
 end
@@ -26,14 +27,14 @@ class Minion
   }
 
   @@MINION_DATA = {
-    'skeleton': { mana_cost: 1, symbol: 's', health: 5, attack: 1, defense: 0, speed: 2, initiative: 3, range: 1.5 },
+    'skeleton': { mana_cost: 1, symbol: 's', health: 5, attack: 1, defense: 0, speed: 3, initiative: 3, range: 1.5 },
     'skeleton archer': { mana_cost: 2, symbol: 'a', health: 2, attack: 2, defense: 0, speed: 1, initiative: 3,
                          range: 3 }
   }
   attr_accessor :attack, :defense, :health, :speed, :initiative, :range, :position
   attr_reader :mana_cost, :owner, :type, :current_health, :symbol, :fields_with_enemies_in_range
 
-  def initialize(x: nil, y: nil, owner: '', type: 'skeleton', board_fields: nil)
+  def initialize(x: nil, y: nil, owner: '', type: 'skeleton', board: nil)
     raise ArgumentError unless @@MINION_DATA.keys.include?(type.to_sym)
 
     @position = Position.new(x, y)
@@ -49,7 +50,8 @@ class Minion
     @initiative = @@MINION_DATA[@type.to_sym][:initiative]
     @range = @@MINION_DATA[@type.to_sym][:range]
     @mana_cost = @@MINION_DATA[@type.to_sym][:mana_cost]
-    @board_fields = board_fields.nil? ? nil : board_fields
+    @board = board
+    @board_fields = board.nil? ? nil : board.array_of_fields
     find_and_update_fields_in_attack_range
     find_enemies_in_attack_range
     add_observers
@@ -60,7 +62,7 @@ class Minion
   end
 
   def move(to_position)
-    raise InvalidMovementError unless @position.distance(to_position) <= @speed
+    raise InvalidMovementError unless Pathfinding.new(@board.field_at(@position), @board.field_at(to_position), @board.pathfinding_data).shortest_path_and_distance.values[0] <= @speed
 
     @position = to_position
     remove_observers

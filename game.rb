@@ -80,7 +80,7 @@ class Game
                                                                           x, y
                                                                         ])
 
-    summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y, board_fields: @board.array_of_fields)
+    summoned_minion = Minion.new(owner: owner, type: type, x: x, y: y, board: @board)
     minion_owner = @players.filter { |player| player.name == owner }.first
     raise InsufficientManaError unless minion_owner.mana >= summoned_minion.mana_cost
 

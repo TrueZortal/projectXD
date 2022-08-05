@@ -18,15 +18,19 @@ class Turn
       next if @game_instance.there_can_be_only_one
 
       puts "it's #{player.name}s move. #{player.status}"
-      if player.manapool.empty?
-        actions_if_player_has_no_mana_available(player)
-      elsif player.minions.empty?
-        actions_if_player_has_no_minions(player)
-      elsif !player.minions.empty? && player.minions.any?(&:can_attack)
-        actions_if_player_has_minions_with_available_targets(player)
-      elsif !player.minions.empty?
-        actions_if_player_has_minions_available(player)
-      end
+      turn_if_tree(player)
+    end
+  end
+
+  def turn_if_tree(player)
+    if player.manapool.empty?
+      actions_if_player_has_no_mana_available(player)
+    elsif player.minions.empty?
+      actions_if_player_has_no_minions(player)
+    elsif !player.minions.empty? && player.minions.any?(&:can_attack)
+      actions_if_player_has_minions_with_available_targets(player)
+    elsif !player.minions.empty?
+      actions_if_player_has_minions_available(player)
     end
   end
 
@@ -103,7 +107,7 @@ class Turn
     show_boardstate
   rescue StandardError
     # puts error.backtrace
-    summon(player_instance_of_current_player)
+    turn_if_tree(player_instance_of_current_player)
   end
 
   def attack(player_instance_of_current_player)
@@ -134,9 +138,9 @@ class Turn
     @game_instance.move(from_field, to_field)
     print_last_log_message
     show_boardstate
-    # rescue StandardError
-    #   # puts error.backtrace
-    #   actions_if_player_has_minions_available(player_instance_of_current_player)
+    rescue StandardError
+      puts "invalid move!"
+      actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def concede(player_instance_of_current_player)

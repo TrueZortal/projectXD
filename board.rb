@@ -17,13 +17,14 @@ end
 
 # working surface for board is @rowified_board, Observers are empowered via @array_of_fields
 class Board
-  attr_reader :upper_limit, :array_of_fields, :summoning_zones
+  attr_reader :upper_limit, :array_of_fields, :summoning_zones, :pathfinding_data
   attr_accessor :rowified_board
 
   def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
     raise ArgumentError unless size_of_board_edge > 1
 
     @board = GenerateBoard.new(size_of_board_edge, uniform, starting_surface)
+    @pathfinding_data = @board.pathfinding_data
     @array_of_fields = @board.array_of_fields
     @rowified_board = @board.rowified
     @size_of_board_edge = size_of_board_edge
@@ -37,6 +38,14 @@ class Board
 
   def state
     @rowified_board
+  end
+
+  def field_at(position_object)
+    @rowified_board[position_object.x][position_object.y]
+  end
+
+  def position_at(array_of_xy)
+    @rowified_board[array_of_xy[0]][array_of_xy[1]].position
   end
 
   def check_field(position_object)

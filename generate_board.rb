@@ -16,7 +16,7 @@ class InvalidPositionError < StandardError
 end
 
 class GenerateBoard
-  attr_accessor :rowified, :array_of_fields
+  attr_accessor :rowified, :array_of_fields, :pathfinding_data
 
   def initialize(size_of_board_edge, uniform, starting_surface)
     raise ArgumentError unless size_of_board_edge > 1
@@ -28,21 +28,46 @@ class GenerateBoard
     generate_an_array_of_fields(size_of_board_edge)
     rowify_the_array_of_fields
     add_obstacles_in_the_non_starting_areas if @uniform == false
+    generate_a_pathfinding_array
   end
 
   def starting_summoning_zones
     set_summoning_zones_to_be_positions
   end
 
-  def field_at(array_of_xy)
-    @rowified[array_of_xy[0]][array_of_xy[1]]
-  end
-
-  def position_at(array_of_xy)
-    @rowified[array_of_xy[0]][array_of_xy[1]].position
+  def generate_a_pathfinding_array
+    @routing = {}
+    @field_index = []
+    add_edges
+    @pathfinding_data = [@routing, @field_index]
   end
 
   private
+
+  def add_edges
+    @array_of_fields.each do |field|
+      @array_of_fields.each do |another_field|
+        if field.position.distance(another_field.position) < 1.42
+          add_edge(field, another_field, field.position.distance(another_field.position)) if field != another_field && field.obstacle == false && another_field.obstacle == false
+        end
+      end
+    end
+  end
+
+  def add_edge(source, target, weight)
+      if !@routing.key?(source)
+        @routing[source] = { target => weight }
+      else
+        @routing[source][target] = weight
+      end
+      if !@routing.key?(target)
+        @routing[target] = { source => weight }
+      else
+        @routing[target][source] = weight
+      end
+      @field_index << source unless @field_index.include?(source)
+      @field_index << target unless @field_index.include?(target)
+  end
 
   def generate_an_array_of_fields(size_of_board_edge)
     @array_of_fields = []
