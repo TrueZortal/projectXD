@@ -34,6 +34,14 @@ class GenerateBoard
     set_summoning_zones_to_be_positions
   end
 
+  def field_at(array_of_xy)
+    @rowified[array_of_xy[0]][array_of_xy[1]]
+  end
+
+  def position_at(array_of_xy)
+    @rowified[array_of_xy[0]][array_of_xy[1]].position
+  end
+
   private
 
   def generate_an_array_of_fields(size_of_board_edge)
