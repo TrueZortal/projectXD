@@ -37,4 +37,11 @@ class CommandQueueTest < Minitest::Test
     assert_equal array_of_elems[3], test.pop
     assert test.empty?
   end
+
+  def test_commands_can_be_bulk_added_to_the_queue
+    # skip
+    array_of_elems = ['1test string', '2another test string', '3yet another test string', '4i should most likely make those shorter shouldnt i?']
+    test = CommandQueue.new.bulk_add(array_of_elems)
+    assert_equal 4, test.size
+  end
 end

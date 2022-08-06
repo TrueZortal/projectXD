@@ -1,13 +1,17 @@
 class CommandQueue
   def initialize(array_of_commands = [])
     @queue = []
-    array_of_commands.each do |command|
-      add(command)
-    end
+    bulk_add(array_of_commands)
   end
 
   def empty?
     @queue.empty?
+  end
+
+  def bulk_add(array_of_commands)
+    array_of_commands.each do |command|
+      add(command)
+    end
   end
 
   def add(string_element)
@@ -20,5 +24,9 @@ class CommandQueue
 
   def pop
     @queue.shift
+  end
+
+  def clear
+    @queue = []
   end
 end

@@ -1,11 +1,15 @@
 # frozen_string_literal: true
-
+require 'singleton'
 require_relative 'pvp'
 require_relative 'input'
+require_relative 'command_queue'
 
 class Menu
+  include Singleton
+  attr_accessor :command_queue
+
   def initialize
-    display_menu
+    @command_queue = CommandQueue.new
   end
 
   def display_menu
@@ -49,6 +53,8 @@ class Menu
   def get_input
     Input.get
   end
-end
 
-Menu.new
+  def self.instance
+    @instance ||= new
+  end
+end

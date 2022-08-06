@@ -16,6 +16,7 @@ require_relative 'battlelog_test'
 require_relative 'generate_board_test'
 require_relative 'input_test'
 require_relative 'calculations_test'
+require_relative 'command_queue_test'
 require 'minitest/autorun'
 
 Dir.glob('**/*Test.rb')
