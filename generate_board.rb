@@ -47,26 +47,27 @@ class GenerateBoard
   def add_edges
     @array_of_fields.each do |field|
       @array_of_fields.each do |another_field|
-        if field.position.distance(another_field.position) < 1.42
-          add_edge(field, another_field, field.position.distance(another_field.position)) if field != another_field && field.obstacle == false && another_field.obstacle == false
+        if field.position.distance(another_field.position) < 1.42 && (field != another_field && field.obstacle == false && another_field.obstacle == false)
+          add_edge(field, another_field,
+                   field.position.distance(another_field.position))
         end
       end
     end
   end
 
   def add_edge(source, target, weight)
-      if !@routing.key?(source)
-        @routing[source] = { target => weight }
-      else
-        @routing[source][target] = weight
-      end
-      if !@routing.key?(target)
-        @routing[target] = { source => weight }
-      else
-        @routing[target][source] = weight
-      end
-      @field_index << source unless @field_index.include?(source)
-      @field_index << target unless @field_index.include?(target)
+    if !@routing.key?(source)
+      @routing[source] = { target => weight }
+    else
+      @routing[source][target] = weight
+    end
+    if !@routing.key?(target)
+      @routing[target] = { source => weight }
+    else
+      @routing[target][source] = weight
+    end
+    @field_index << source unless @field_index.include?(source)
+    @field_index << target unless @field_index.include?(target)
   end
 
   def generate_an_array_of_fields(size_of_board_edge)

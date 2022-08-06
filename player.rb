@@ -73,4 +73,8 @@ class Player
     end
     newline_list
   end
+
+  def puts(string)
+    Output.new.print(string)
+  end
 end

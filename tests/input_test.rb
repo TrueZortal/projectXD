@@ -25,6 +25,4 @@ class InputTest < Minitest::Test
     assert_equal value, Input.get
     test_queue.clear
   end
-
-
 end

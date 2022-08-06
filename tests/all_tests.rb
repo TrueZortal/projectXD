@@ -3,6 +3,8 @@
 # exlucded because they break auto testing
 # require_relative 'pvp_test'
 # require_relative 'turn_test'
+# excluded because it breaks output
+# require_relative 'menu_test'
 
 require_relative 'board_test'
 require_relative 'game_test'

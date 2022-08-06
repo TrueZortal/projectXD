@@ -59,4 +59,8 @@ class PVP
   def show_boardstate
     puts @game.board.render_board
   end
+
+  def puts(string)
+    Output.new.print(string)
+  end
 end

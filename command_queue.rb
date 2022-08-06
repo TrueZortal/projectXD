@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CommandQueue
   def initialize(array_of_commands = [])
     @queue = []

@@ -122,9 +122,9 @@ class Turn
     @game_instance.attack(from_field, to_field)
     print_last_log_message
     show_boardstate
-  rescue StandardError
+    # rescue StandardError
     # puts error.backtrace
-    actions_if_player_has_minions_available(player_instance_of_current_player)
+    # actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def move(player_instance_of_current_player)
@@ -138,9 +138,9 @@ class Turn
     @game_instance.move(from_field, to_field)
     print_last_log_message
     show_boardstate
-    rescue StandardError
-      puts "invalid move!"
-      actions_if_player_has_minions_available(player_instance_of_current_player)
+  rescue StandardError
+    puts 'invalid move!'
+    actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def concede(player_instance_of_current_player)
@@ -159,5 +159,9 @@ class Turn
 
   def set_turn_order
     @order = @game_instance.players.shuffle
+  end
+
+  def puts(string)
+    Output.new.print(string)
   end
 end

@@ -64,7 +64,8 @@ class Minion
   end
 
   def move(to_position)
-    raise InvalidMovementError unless Pathfinding.new(@board.field_at(@position), @board.field_at(to_position), @board.pathfinding_data).shortest_path_and_distance.values[0] <= @speed
+    raise InvalidMovementError unless Pathfinding.new(@board.field_at(@position), @board.field_at(to_position),
+                                                      @board.pathfinding_data).shortest_path_and_distance.values[0] <= @speed
 
     @position = to_position
     remove_observers
@@ -95,7 +96,7 @@ class Minion
     { pos: @position.to_a, type: @type, hp: @current_health, attack: @attack, defense: @defense }
   end
 
-  #This should not be implemented here
+  # This should not be implemented here
   def print_selectable_hash_of_available_targets
     generate_selectable_hash_of_available_targets
   end
@@ -116,7 +117,7 @@ class Minion
     @fields_in_attack_range.uniq!
   end
 
-  #This should not be implemented here
+  # This should not be implemented here
   def find_fields_between_self_and_target(field)
     array_of_bidrectional_route_coordinates = @position.get_valid_routes(field.position)
     biderctional_array_of_route_fields = []
@@ -128,7 +129,7 @@ class Minion
     biderctional_array_of_route_fields
   end
 
-  #This should be only partially implemented here/call outside method for this
+  # This should be only partially implemented here/call outside method for this
   def find_enemies_in_attack_range
     @fields_with_enemies_in_range = []
     @fields_in_attack_range.each do |field|
@@ -140,7 +141,7 @@ class Minion
     @fields_with_enemies_in_range
   end
 
-  #This should not be implemented here
+  # This should not be implemented here
   def check_if_interaction_with_field_is_not_blocked_by_obstacles(array_of_fields)
     array_of_fields.filter! do |field|
       find_fields_between_self_and_target(field).any? do |array_of_coordinates|
@@ -163,7 +164,7 @@ class Minion
     end
   end
 
-  #This should not be implemented here
+  # This should not be implemented here
   def generate_selectable_hash_of_available_targets
     target_menu = {}
     @fields_with_enemies_in_range.each_with_index do |field, index|
@@ -172,5 +173,9 @@ class Minion
     target_menu.each_pair do |id, status|
       puts "#{id} : #{status}"
     end
+  end
+
+  def puts(string)
+    Output.new.print(string)
   end
 end

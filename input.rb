@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+
 require_relative 'command_queue'
 require_relative 'menu'
-
 
 class Input
   def initialize(input: $stdin)

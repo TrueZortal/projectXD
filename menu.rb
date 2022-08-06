@@ -1,7 +1,9 @@
 # frozen_string_literal: true
+
 require 'singleton'
 require_relative 'pvp'
 require_relative 'input'
+require_relative 'output'
 require_relative 'command_queue'
 
 class Menu
@@ -52,6 +54,10 @@ class Menu
 
   def get_input
     Input.get
+  end
+
+  def puts(string)
+    Output.new.print(string)
   end
 
   def self.instance

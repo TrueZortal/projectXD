@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-
-
 class Pathfinding
   def initialize(starting_field_object, target_field_object, pathfinding_data_array)
     @INFINITY = 50
@@ -12,11 +10,9 @@ class Pathfinding
     dijkstra(@starting_node)
   end
 
-
   def dijkstra(source)
-    if !@routing.key?(@target_node)
-      return
-    end
+    return unless @routing.key?(@target_node)
+
     @distance = {}
     @prev = {}
 
@@ -33,6 +29,7 @@ class Pathfinding
         current_node = node if !current_node || (@distance[node] && @distance[node] < @distance[current_node])
       end
       break if @distance[current_node] == @INFINITY
+
       unvisited_nodes_queue -= [current_node]
       @routing[current_node].each_key do |another_node|
         alternative_route = @distance[current_node] + @routing[current_node][another_node]
@@ -47,21 +44,19 @@ class Pathfinding
   def shortest_path_and_distance
     @shortest_path = []
     distance = 0
-    if !@routing.key?(@target_node)
-      return puts "NO PATH"
-    end
+    return puts 'NO PATH' unless @routing.key?(@target_node)
 
-    until @target_node == @starting_node do
-      if @prev[@target_node] != -1
-        @shortest_path << @target_node
-      end
+    until @target_node == @starting_node
+      @shortest_path << @target_node if @prev[@target_node] != -1
       distance += @routing[@prev[@target_node]][@target_node]
       @target_node = @prev[@target_node]
     end
     @shortest_path << @target_node
 
-    {@shortest_path => distance}
+    { @shortest_path => distance }
+  end
+
+  def puts(string)
+    Output.new.print(string)
   end
 end
-
-

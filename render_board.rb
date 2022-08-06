@@ -11,7 +11,6 @@ class RenderBoard
   def self.render(rowified_board)
     rendered_board = String.new(encoding: 'UTF-8')
     columns = rowified_board.size - 1
-    # p rowified_board
     rowified_board.transpose.each_with_index do |row, index|
       row.each do |field|
         rendered_board << if field.is_occupied?
