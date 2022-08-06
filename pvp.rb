@@ -2,7 +2,7 @@
 
 require_relative 'game'
 require_relative 'turn'
-require_relative 'inputs'
+require_relative 'input'
 
 class PVP
   attr_accessor :game
@@ -21,9 +21,9 @@ class PVP
   def populate_players
     @players.times do |index|
       puts "enter P#{index + 1} name"
-      name = Inputs.get_raw
+      name = Input.get_raw
       puts "enter P#{index + 1} maximum mana"
-      mana = Inputs.get.to_i
+      mana = Input.get.to_i
       @game.add_player(name, max_mana: mana)
     end
   end
@@ -40,7 +40,7 @@ class PVP
   end
 
   def query_log_view
-    log_query = Inputs.get
+    log_query = Input.get
     case log_query
     when 'yes'
       puts @game.log.print

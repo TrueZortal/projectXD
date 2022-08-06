@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+require_relative 'command_queue'
 
-class Inputs
+class Input
   def self.get
     call_gets.downcase
   end
@@ -14,6 +15,7 @@ class Inputs
   end
 
   def self.call_gets
+
     gets.chomp
   end
 end

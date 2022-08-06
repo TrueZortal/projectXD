@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'pvp'
-require_relative 'inputs'
+require_relative 'input'
 
 class Menu
   def initialize
@@ -47,7 +47,7 @@ class Menu
   end
 
   def get_input
-    gets.chomp.downcase
+    Input.get
   end
 end
 

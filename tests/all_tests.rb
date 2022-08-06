@@ -14,7 +14,7 @@ require_relative 'player_test'
 require_relative 'manapool_test'
 require_relative 'battlelog_test'
 require_relative 'generate_board_test'
-require_relative 'inputs_test'
+require_relative 'input_test'
 require_relative 'calculations_test'
 require 'minitest/autorun'
 
