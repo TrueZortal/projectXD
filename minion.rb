@@ -50,10 +50,12 @@ class Minion
     @initiative = @@MINION_DATA[@type.to_sym][:initiative]
     @range = @@MINION_DATA[@type.to_sym][:range]
     @mana_cost = @@MINION_DATA[@type.to_sym][:mana_cost]
+    #----- The below should most likely be removed to another class not be part of Minion class -----
     @board = board
     @board_fields = board.nil? ? nil : board.array_of_fields
     find_and_update_fields_in_attack_range
     find_enemies_in_attack_range
+    #----- The below should most likely be removed to another class not be part of Minion class -----
     add_observers
   end
 
@@ -93,6 +95,7 @@ class Minion
     { pos: @position.to_a, type: @type, hp: @current_health, attack: @attack, defense: @defense }
   end
 
+  #This should not be implemented here
   def print_selectable_hash_of_available_targets
     generate_selectable_hash_of_available_targets
   end
@@ -102,15 +105,6 @@ class Minion
   end
 
   private
-
-  def find_fields_in_movement_range
-    @fields_in_movement_range = []
-    @board_fields&.filter do |field|
-      field.position != @position && @position.distance(field.position) <= @speed
-    end&.each do |field|
-      @fields_in_movement_range << field
-    end
-  end
 
   def find_and_update_fields_in_attack_range
     @fields_in_attack_range = []
@@ -122,6 +116,7 @@ class Minion
     @fields_in_attack_range.uniq!
   end
 
+  #This should not be implemented here
   def find_fields_between_self_and_target(field)
     array_of_bidrectional_route_coordinates = @position.get_valid_routes(field.position)
     biderctional_array_of_route_fields = []
@@ -133,6 +128,7 @@ class Minion
     biderctional_array_of_route_fields
   end
 
+  #This should be only partially implemented here/call outside method for this
   def find_enemies_in_attack_range
     @fields_with_enemies_in_range = []
     @fields_in_attack_range.each do |field|
@@ -144,6 +140,7 @@ class Minion
     @fields_with_enemies_in_range
   end
 
+  #This should not be implemented here
   def check_if_interaction_with_field_is_not_blocked_by_obstacles(array_of_fields)
     array_of_fields.filter! do |field|
       find_fields_between_self_and_target(field).any? do |array_of_coordinates|
@@ -166,6 +163,7 @@ class Minion
     end
   end
 
+  #This should not be implemented here
   def generate_selectable_hash_of_available_targets
     target_menu = {}
     @fields_with_enemies_in_range.each_with_index do |field, index|
