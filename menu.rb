@@ -25,6 +25,8 @@ class Menu
     case ans
     when 'pvp'
       start_pvp
+    when 'debug_pvp'
+      start_debug_pvp
     when 'exit'
       exit!
     else
@@ -46,10 +48,23 @@ class Menu
                 false
               end
     PVP.new(players: players, board_size: board_size, uniform: uniform)
-  rescue StandardError
-    puts 'game crashed, restarting'
-    puts error.backtrace
-    retry
+  # rescue StandardError
+  #   puts 'game crashed, restarting'
+  #   retry
+  end
+
+  def start_debug_pvp
+    puts 'how many players will be playing?'
+    players = get_input.to_i
+    puts 'how big would you like the board?'
+    board_size = get_input.to_i
+    puts 'would you like a cool board or a boring one? cool/boring'
+    board_type = get_input
+    uniform = true
+    PVP.new(players: players, board_size: board_size, uniform: uniform, enable_randomness: false)
+  # rescue StandardError
+  #   puts 'game crashed, restarting'
+  #   retry
   end
 
   def get_input

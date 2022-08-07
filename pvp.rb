@@ -3,13 +3,15 @@
 require_relative 'game'
 require_relative 'turn'
 require_relative 'input'
+require_relative 'output'
 
 class PVP
   attr_accessor :game
 
-  def initialize(players: 2, board_size: 8, uniform: false)
+  def initialize(players: 2, board_size: 8, uniform: false, enable_randomness: true)
     @game = Game.new(board_size, uniform: false)
     @players = players
+    @random = enable_randomness
     populate_players
     show_boardstate
     gameplay_loop
@@ -24,7 +26,11 @@ class PVP
       name = Input.get_raw
       puts "enter P#{index + 1} maximum mana"
       mana = Input.get.to_i
-      @game.add_player(name, max_mana: mana)
+      if @random
+        @game.add_player(name, max_mana: mana)
+      else
+        @game.add_player(name, max_mana: mana, summoning_zone: @game.board.array_of_coordinates)
+      end
     end
   end
 
@@ -53,7 +59,10 @@ class PVP
   end
 
   def gameplay_loop
-    Turn.new(@game) until @game.there_can_be_only_one
+    until @game.there_can_be_only_one
+      set_turn_order
+      Turn.new(@game, @order)
+    end
   end
 
   def show_boardstate
@@ -63,4 +72,14 @@ class PVP
   def puts(string)
     Output.new.print(string)
   end
+
+  def set_turn_order
+    @order = if @random
+               @game.players.shuffle
+             else
+               @game.players
+             end
+  end
 end
+
+# PVP.new(players: 2, board_size: 8, uniform: false, enable_randomness: false)

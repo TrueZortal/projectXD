@@ -17,7 +17,7 @@ end
 
 # working surface for board is @rowified_board, Observers are empowered via @array_of_fields
 class Board
-  attr_reader :upper_limit, :array_of_fields, :summoning_zones, :pathfinding_data
+  attr_reader :upper_limit, :array_of_fields, :summoning_zones, :pathfinding_data, :array_of_coordinates
   attr_accessor :rowified_board
 
   def initialize(size_of_board_edge, uniform: true, starting_surface: 'grass')
@@ -26,6 +26,7 @@ class Board
     @board = GenerateBoard.new(size_of_board_edge, uniform, starting_surface)
     @pathfinding_data = @board.pathfinding_data
     @array_of_fields = @board.array_of_fields
+    @array_of_coordinates = @array_of_fields.map { |field| field.position.to_a }
     @rowified_board = @board.rowified
     @size_of_board_edge = size_of_board_edge
     @upper_limit = @size_of_board_edge - 1

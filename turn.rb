@@ -4,9 +4,9 @@ require_relative 'position'
 require_relative 'input'
 
 class Turn
-  def initialize(game_instance)
+  def initialize(game_instance, turn_order)
     @game_instance = game_instance
-    set_turn_order
+    @order = turn_order
     play_turn
   end
 
@@ -23,12 +23,12 @@ class Turn
   end
 
   def turn_if_tree(player)
-    if player.manapool.empty?
+    if !player.minions.empty? && player.minions.any?(&:can_attack)
+      actions_if_player_has_minions_with_available_targets(player)
+    elsif player.manapool.empty?
       actions_if_player_has_no_mana_available(player)
     elsif player.minions.empty?
       actions_if_player_has_no_minions(player)
-    elsif !player.minions.empty? && player.minions.any?(&:can_attack)
-      actions_if_player_has_minions_with_available_targets(player)
     elsif !player.minions.empty?
       actions_if_player_has_minions_available(player)
     end
@@ -106,7 +106,6 @@ class Turn
     print_last_log_message
     show_boardstate
   rescue StandardError
-    # puts error.backtrace
     turn_if_tree(player_instance_of_current_player)
   end
 
@@ -122,9 +121,9 @@ class Turn
     @game_instance.attack(from_field, to_field)
     print_last_log_message
     show_boardstate
-    # rescue StandardError
-    # puts error.backtrace
-    # actions_if_player_has_minions_available(player_instance_of_current_player)
+  rescue StandardError
+    puts 'invalid move!'
+    actions_if_player_has_minions_available(player_instance_of_current_player)
   end
 
   def move(player_instance_of_current_player)
@@ -155,10 +154,6 @@ class Turn
 
   def show_boardstate
     puts @game_instance.board.render_board
-  end
-
-  def set_turn_order
-    @order = @game_instance.players.shuffle
   end
 
   def puts(string)
